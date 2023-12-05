@@ -27,12 +27,20 @@ class Address extends Controller
     /**
      * 收货地址列表
      */
-    public function list($shop_supplier_id)
+    public function list($shop_supplier_id,$region_id,$cust_id)
     {
-		 
+
         $user = $this->getUser();
+		
         $model = new UserAddress;
-        $list = $model->list($user['user_id'], $shop_supplier_id);
+		if ($region_id!='' && $region_id!=0){
+			$list = $model->listByRegionId($user['user_id'], $shop_supplier_id,$region_id);
+		}else if ($cust_id!='' && $cust_id!=0){
+			$list = $model->listByCustId($user['user_id'], $shop_supplier_id,$cust_id);
+		}else{
+			$list = $model->list($user['user_id'], $shop_supplier_id);
+		}
+		
         return $this->renderSuccess('', [
             'list' => $list,
             'default_id' => $user['address_id'],

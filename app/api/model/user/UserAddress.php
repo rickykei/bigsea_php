@@ -33,16 +33,29 @@ class UserAddress extends UserAddressModel
     public function list($user_id, $shop_supplier_id)
     {
         $supplier = SupplierModel::detail($shop_supplier_id);
-        $list = $this->where('user_id', '=', $user_id)
-            ->field("*,6378.137*2*ASIN(SQRT(POW(SIN(({$supplier['latitude']} * PI()/180-latitude*PI()/180)/2),2) + COS({$supplier['latitude']}*PI()/180)*COS(latitude*PI()/180)*POW(SIN(({$supplier['longitude']} * PI()/180-longitude*PI()/180)/2),2)))*1000 AS distance")
+        $list = $this->where('user_id', '=', $user_id) 
             ->select();
-        foreach ($list as &$item) {
-            $item['distance'] = round($item['distance'] / 1000, 2);
-            $item['status'] = $item['distance'] > $supplier['delivery_distance'] ? 0 : 1;
-        }
+       
         return $list;
     }
-
+   public function listByRegionId($user_id, $shop_supplier_id,$region_id)
+   {
+       $supplier = SupplierModel::detail($shop_supplier_id);
+       $list = $this->where('user_id', '=', $user_id)
+           ->where('region_id', '=', $region_id)
+           ->select();
+      
+       return $list;
+   }
+   public function listByCustId($user_id, $shop_supplier_id,$cust_id)
+   {
+       $supplier = SupplierModel::detail($shop_supplier_id);
+       $list = $this->where('user_id', '=', $user_id)
+	   ->where('cust_id', '=', $cust_id)
+           ->select();
+       return $list;
+   }
+   
     /**
      * 新增收货地址
      */
