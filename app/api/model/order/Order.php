@@ -76,11 +76,21 @@ class Order extends OrderModel
                 $model = $model->where('pay_status', '=', 20)->where('order_status', '=', 30);
                 break;
         }
-        return $model->with(['product.image', 'supplier'])
-            ->where('user_id', '=', $user_id)
-            ->where('is_delete', '=', 0)
-            ->order(['create_time' => 'desc'])
-            ->paginate($params);
+		// ricky
+		if ($user_id==3){
+				return $model->with(['product.image', 'supplier']) 
+					->where('is_delete', '=', 0)
+					->order(['create_time' => 'desc'])
+					->paginate($params);
+			}else{
+				return $model->with(['product.image', 'supplier'])
+				->where('user_id', '=', $user_id)
+				    ->where('is_delete', '=', 0)
+				    ->order(['create_time' => 'desc'])
+				    ->paginate($params);
+			}
+			
+			
     }
 
     /**

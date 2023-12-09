@@ -4,6 +4,7 @@ namespace app\api\controller\user;
 
 use app\api\model\user\UserAddress;
 use app\api\controller\Controller;
+use app\api\model\user\User as UserModel;
 
 /**
  * 收货地址控制器
@@ -31,18 +32,21 @@ class Address extends Controller
     {
 
         $user = $this->getUser();
-		
-        $model = new UserAddress;
+		$model = new UserAddress;
+		  
 		if ($region_id!='' && $region_id!=0){
 			$list = $model->listByRegionId($user['user_id'], $shop_supplier_id,$region_id);
 		}else if ($cust_id!='' && $cust_id!=0){
 			$list = $model->listByCustId($user['user_id'], $shop_supplier_id,$cust_id);
+			$realcustmodel = new UserModel;
+			$data['uid']=$cust_id;
+			$rlist=$realcustmodel->getUser($data);
 		}else{
 			$list = $model->list($user['user_id'], $shop_supplier_id);
 		}
 		
         return $this->renderSuccess('', [
-            'list' => $list,
+            'list' => $list, 
             'default_id' => $user['address_id'],
         ]);
     }
@@ -101,7 +105,7 @@ class Address extends Controller
     public function setDefault($address_id)
     {
         $user = $this->getUser();
-        $model = UserAddress::detail($user['user_id'], $address_id);
+		$model = UserAddress::detail($user['user_id'], $address_id);
         if ($model->setDefault($user)) {
             return $this->renderSuccess('设置成功');
         }

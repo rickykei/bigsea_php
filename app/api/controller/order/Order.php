@@ -24,8 +24,14 @@ class Order extends Controller
             return $this->renderError('商品不能为空');
         }
         $user = $this->getUser();
-        // 商品结算信息
-        $CartModel = new CartModel();
+        
+		//ric change user if id =3
+		if (isset($params['cust_id'])&&$user['user_id']==3)
+			$user['user_id']=$params['cust_id'];
+		
+		
+		// 商品结算信息
+		$CartModel = new CartModel();
         // 购物车商品列表
         $productList = $CartModel->getCartList($params, $this->getUser());
         // 实例化订单service

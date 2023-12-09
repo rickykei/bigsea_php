@@ -50,10 +50,11 @@ class MasterOrderSettledService extends OrderSettledService
                 $this->error = "超出配送范围{$supplier['delivery_distance']}km";
                 return false;
             }
-            if ($supplier['delivery_time'] && strtotime($this->params['mealtime']) > strtotime($supplier['delivery_time'][1])) {
+            /* ric no deleriy time restriction
+			if ($supplier['delivery_time'] && strtotime($this->params['mealtime']) > strtotime($supplier['delivery_time'][1])) {
                 $this->error = "配送时间不在营业时间范围";
                 return false;
-            }
+            }*/
         } elseif ($this->params['delivery'] == 20) {
             if ($supplier['pick_time'] && strtotime($this->params['mealtime']) > strtotime($supplier['pick_time'][1])) {
                 $this->error = "自提时间不在营业时间范围";

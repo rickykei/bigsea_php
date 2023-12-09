@@ -41,8 +41,7 @@ class UserAddress extends UserAddressModel
    public function listByRegionId($user_id, $shop_supplier_id,$region_id)
    {
        $supplier = SupplierModel::detail($shop_supplier_id);
-       $list = $this->where('user_id', '=', $user_id)
-           ->where('region_id', '=', $region_id)
+       $list = $this->where('region_id', '=', $region_id)
            ->select();
       
        return $list;
@@ -50,9 +49,8 @@ class UserAddress extends UserAddressModel
    public function listByCustId($user_id, $shop_supplier_id,$cust_id)
    {
        $supplier = SupplierModel::detail($shop_supplier_id);
-       $list = $this->where('user_id', '=', $user_id)
-	   ->where('cust_id', '=', $cust_id)
-           ->select();
+       $list = $this->where('user_id', '=', $cust_id)
+	    ->select();
        return $list;
    }
    
@@ -127,7 +125,9 @@ class UserAddress extends UserAddressModel
      */
     public static function detail($user_id, $address_id)
     {
-        $where = ['user_id' => $user_id, 'address_id' => $address_id];
+		
+     //   $where = ['user_id' => $user_id, 'address_id' => $address_id];
+	    $where = ['address_id' => $address_id];
         return static::where($where)->find();
     }
 
