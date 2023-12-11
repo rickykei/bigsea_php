@@ -4,7 +4,7 @@ namespace app\api\model\user;
 
 use app\common\model\user\UserAddress as UserAddressModel;
 use app\api\model\supplier\Supplier as SupplierModel;
-
+use app\api\model\user\User as UserModel;
 /**
  * 用户收货地址模型
  */
@@ -43,7 +43,15 @@ class UserAddress extends UserAddressModel
        $supplier = SupplierModel::detail($shop_supplier_id);
        $list = $this->where('region_id', '=', $region_id)
            ->select();
-      
+		   $um= new UserModel;
+	 
+		foreach ($list as $key => &$rec) {
+				$data['uid']=$rec['user_id'];
+			 
+				$cust_data = $um->getUser($data);
+				$rec['nickName']=$cust_data['nickName'];
+		}
+       
        return $list;
    }
    public function listByCustId($user_id, $shop_supplier_id,$cust_id)
@@ -51,6 +59,15 @@ class UserAddress extends UserAddressModel
        $supplier = SupplierModel::detail($shop_supplier_id);
        $list = $this->where('user_id', '=', $cust_id)
 	    ->select();
+		
+		$um= new UserModel;
+			 
+		foreach ($list as $key => &$rec) {
+				$data['uid']=$rec['user_id'];
+			 
+				$cust_data = $um->getUser($data);
+				$rec['nickName']=$cust_data['nickName'];
+		}
        return $list;
    }
    

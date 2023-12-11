@@ -7,6 +7,7 @@ use app\api\model\order\Order as OrderModel;
 use app\api\service\order\settled\MasterOrderSettledService;
 use app\api\controller\Controller;
 use app\api\model\settings\Message as MessageModel;
+use app\api\model\user\User as UserModel;
 
 /**
  * 普通订单
@@ -26,9 +27,15 @@ class Order extends Controller
         $user = $this->getUser();
         
 		//ric change user if id =3
-		if (isset($params['cust_id'])&&$user['user_id']==3)
+		//if (isset($params['cust_id'])&&$user['user_id']==3){
+		if (isset($params['cust_id'])&&$user['user_id']==3){
+		   
+			$user['org_user_id']=$user['user_id'];
+			
 			$user['user_id']=$params['cust_id'];
-		
+			 
+		}
+		//ric
 		
 		// 商品结算信息
 		$CartModel = new CartModel();
@@ -36,13 +43,24 @@ class Order extends Controller
         $productList = $CartModel->getCartList($params, $this->getUser());
         // 实例化订单service
         $orderService = new MasterOrderSettledService($user, $productList, $params);
+		
+		
         // 获取订单信息
         $orderInfo = $orderService->settlement();
+		
+		//ric get cust_id from address obj
+		$um= new UserModel;
+		$data['uid']=$orderInfo['address']['user_id'];
+		$cust_data = $um->getUser($data);
+		$user['nickName']=$cust_data['nickName'];
+		//ric get cust_id from address obj
+		
         if ($this->request->isGet()) {
             // 如果来源是小程序, 则获取小程序订阅消息id.获取支付成功,发货通知.
             $template_arr = MessageModel::getMessageByNameArr($params['pay_source'], ['order_pay_user', 'order_delivery_user', 'order_refund_user']);
             $balance = $user['balance'];
-            return $this->renderSuccess('', compact('orderInfo', 'template_arr', 'balance'));
+			$nickName = $user['nickName'];
+            return $this->renderSuccess('', compact('orderInfo', 'template_arr', 'balance','nickName'));
         }
         // 订单结算提交
         if ($orderService->hasError()) {
