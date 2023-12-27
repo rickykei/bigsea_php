@@ -43,7 +43,8 @@ class Product extends ProductModel
         $data = parent::getList($param, 1);
 
         // 隐藏api属性
-        !$data->isEmpty() && $data->hidden(['content', 'image']);
+		//ricky 20231224
+        //!$data->isEmpty() && $data->hidden(['content', 'image']);
         // 整理列表数据并返回
         $param['userInfo'] = $userInfo;
         return $this->setProductListDataFromApi($data, true, $param);

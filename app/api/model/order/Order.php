@@ -77,13 +77,13 @@ class Order extends OrderModel
                 break;
         }
 		// ricky
-		if ($user_id==3){
-				return $model->with(['product.image', 'supplier']) 
+		if ($user_id<10000){
+				return $model->with(['product.image', 'supplier','user','address']) 
 					->where('is_delete', '=', 0)
 					->order(['create_time' => 'desc'])
 					->paginate($params);
 			}else{
-				return $model->with(['product.image', 'supplier'])
+				return $model->with(['product.image', 'supplier','user','address'])
 				->where('user_id', '=', $user_id)
 				    ->where('is_delete', '=', 0)
 				    ->order(['create_time' => 'desc'])

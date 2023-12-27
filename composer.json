@@ -38,7 +38,8 @@
         "firebase/php-jwt": "^6.8",
         "topthink/think-worker": "^4.0",
         "endroid/qr-code": "^4.8",
-        "wechatpay/wechatpay": "^1.4"
+        "wechatpay/wechatpay": "^1.4",
+        "tecnickcom/tcpdf": "^6.6"
     },
     "require-dev": {
         "symfony/var-dumper": ">=4.2",
