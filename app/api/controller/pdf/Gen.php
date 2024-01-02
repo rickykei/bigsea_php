@@ -205,12 +205,13 @@ class Gen extends Controller
 			 
 			<td colspan="4">'.$order_model->address->address.'</td>
 		</tr>
-		<tr><td colspan="5"><hr></td></tr> 
+		
 		<tr><td width="50"><font face="arialblack" >No.</font></td>
 		<td width="280"><font  face="arialblack" >Description </font></td>
 		<td width="100"><font  face="arialblack" >QTY</font></td>
 		<td width="110"><font face="arialblack" >Unit Price</font></td>
 		<td width="100"><font  face="arialblack" >Total</font></td></tr> 
+		<tr><td colspan="5"><hr></td></tr> 
 		'.$prod_html[$i-1].' 
 		 <tr><td colspan="5"><hr></td></tr> 
 		 <tr><td colspan="2"></td><td colspan="2"><font face="arialblack">Total Amount:</font></td><td >$'.number_format($total_amount[$i-1], 2, '.', '').'</td></tr>';
