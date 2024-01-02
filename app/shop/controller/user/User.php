@@ -4,6 +4,7 @@ namespace app\shop\controller\user;
 
 use app\shop\controller\Controller;
 use app\shop\model\user\User as UserModel;
+use app\shop\model\user\UserAddress as UserAddressModel;
 
 /**
  * 用户管理
@@ -46,7 +47,36 @@ class User extends Controller
         }
         return $this->renderError($model->getError() ?: '添加失败');
     }
-
+	
+    /**
+     * 添加用户加地址
+	 * 20240102 
+	 * ricky
+     */
+    public function addUserAddress()
+    { 
+		 
+		$data = json_decode($this->postData()['params'], true);
+		$user = $data['user'];
+		$userAdd = $data['address'] ;
+		 
+		$model = new UserModel;
+		// 新增记录
+	 	if ($model->add($user)) {
+			return $this->renderSuccess('添加成功');
+			/*$model = new UserAddressModel;
+			// 新增记录
+			if ($model->add($userAdd) {
+				return $this->renderSuccess('添加成功');
+			}else{
+				return $this->renderError($model->getError() ?: '添加失败');
+			}
+			*/
+		}
+		 
+	    
+    }
+	
     /**
      * 用户充值
      */
