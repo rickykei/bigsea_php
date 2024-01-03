@@ -58,22 +58,45 @@ class User extends Controller
 		 
 		$data = json_decode($this->postData()['params'], true);
 		$user = $data['user'];
-		$userAdd = $data['address'] ;
-		 
-		$model = new UserModel;
-		// 新增记录
-	 	if ($model->add($user)) {
-			return $this->renderSuccess('添加成功');
-			/*$model = new UserAddressModel;
+		$userAddress = $data['address'] ;
+		
+		if (isset($user)){ 
+				
+			$model = new UserModel;
+			
+			//add other parameter for user table
+			$user['alipay_id']=0;
+			$user['reg_source']=0;
+			$user['gender']=0;
+			$user['address_id']=0;
+			$user['user_type']=1;
+			$user['is_delete']=0;
+			$user['app_id']=10001;
+			
+			
 			// 新增记录
-			if ($model->add($userAdd) {
-				return $this->renderSuccess('添加成功');
-			}else{
-				return $this->renderError($model->getError() ?: '添加失败');
+			if ($model->add($user)) {
+				$modelAddress = new UserAddressModel;
+				
+				//fill other paramter for user.address table
+				$userAddress['user_id']=$model->user_id;
+				$userAddress['province_id']=0;
+				$userAddress['city_id']=0;
+				$userAddress['longitude']=114.16586;
+				$userAddress['latitude']=114.16586;
+				$userAddress['app_id']=10001;
+				
+				
+				// 新增记录
+				if ($modelAddress->add($userAddress)) {
+					return $this->renderSuccess('添加成功');
+				}else{
+					return $this->renderError($modelAddress>getError() ?: '添加失败');
+				}
+				
+			   
 			}
-			*/
 		}
-		 
 	    
     }
 	
