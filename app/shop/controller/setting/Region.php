@@ -16,17 +16,5 @@ class Region extends Controller
 		  
 	 }
 	 
-  public function add($scene = 'add')
-  {
-      // get请求
-      if ($this->request->isGet()) {
-          return $this->getBaseData();
-      }
-     
-  }
-    
-    public function getBaseData()
-    {
-        return $this->renderSuccess('', array_merge(SettingService::getEditData(), []));
-    }
+ 
 }

@@ -116,7 +116,10 @@ class AuthService
             return true;
         }
         // 验证当前请求是否在白名单
+		 
         if (in_array($url, $this->allowAllAction)) {
+		
+			 
             return true;
         }
 

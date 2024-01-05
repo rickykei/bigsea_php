@@ -5,6 +5,7 @@ namespace app\shop\controller\user;
 use app\shop\controller\Controller;
 use app\shop\model\user\User as UserModel;
 use app\shop\model\user\UserAddress as UserAddressModel;
+use app\shop\service\SettingService;
 
 /**
  * 用户管理
@@ -48,6 +49,7 @@ class User extends Controller
         return $this->renderError($model->getError() ?: '添加失败');
     }
 	
+	
     /**
      * 添加用户加地址
 	 * 20240102 
@@ -55,6 +57,11 @@ class User extends Controller
      */
     public function addUserAddress()
     { 
+		
+		// get请求
+		if ($this->request->isGet()) {
+		    return $this->getBaseData();
+		}
 		 
 		$data = json_decode($this->postData()['params'], true);
 		$user = $data['user'];
@@ -100,6 +107,14 @@ class User extends Controller
 	    
     }
 	
+	/** ricky 20240106
+	*user.user/add
+	*get region base data
+	*/
+	public function getBaseData()
+	{
+	    return $this->renderSuccess('', array_merge(SettingService::getEditData(), []));
+	}
     /**
      * 用户充值
      */
