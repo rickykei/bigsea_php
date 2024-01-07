@@ -90,7 +90,7 @@ class User extends Controller
 				$userAddress['province_id']=0;
 				$userAddress['city_id']=0;
 				$userAddress['longitude']=114.16586;
-				$userAddress['latitude']=114.16586;
+				$userAddress['latitude']=22.27518;
 				$userAddress['app_id']=10001;
 				
 				

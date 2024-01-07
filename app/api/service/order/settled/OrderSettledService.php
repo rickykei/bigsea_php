@@ -164,7 +164,12 @@ abstract class OrderSettledService extends BaseService
         sort($deliveryType);
         $delivery = $this->params['delivery'] > 0 ? $this->params['delivery'] : $deliveryType[0];
         //获取桌号信息
-        $table_no = '';
+		//ricky 20240108        $table_no = '';
+		if (isset($this->params['table_no']))
+		$table_no=$this->params['table_no'];
+		else
+		$table_no='';
+		
         if (isset($this->params['table_id']) && ($this->params['table_id'])) {
             $table = TableModel::detail($this->params['table_id']);
             $table_no = $table['table_no'];

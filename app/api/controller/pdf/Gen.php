@@ -1,6 +1,7 @@
 <?php
 
 namespace app\api\controller\pdf;
+
 use app\api\controller\Controller;
 use app\api\model\order\Order as OrderModel;
 
@@ -21,7 +22,7 @@ class Gen extends Controller
 	
 	public function setPdf($comp_name, $order_model){
 
-    // $logo    = Env::get('root_path') .'public/static/images/logo.jpg';
+    // $logo = Env::get('root_path') .'/image/logo.jpg';
 
     // require Env::get('root_path') .'vendor/tecnickcom/tcpdf/tcpdf.php';
 
@@ -30,7 +31,8 @@ class Gen extends Controller
     $pdf->SetCreator(PDF_CREATOR);
 
     $pdf->SetAuthor("大海");//设置作者
-
+	
+	 
     $pdf->SetTitle("INVOICE");
 
     $pdf->SetSubject('TCPDF ');
@@ -43,7 +45,7 @@ class Gen extends Controller
 
     // 设置页眉显示的内容
 
-    //$pdf->SetHeaderData($logo, 60, '', '');
+   // $pdf->SetHeaderData($logo, 60, '', '');
 
     // 设置页眉字体
 
@@ -164,21 +166,7 @@ class Gen extends Controller
 	        <th></th>
 			<th></th>
 	    </tr>
-	    <tr>
-	        
-			<td colspan="5" align="right"><h1>'.$comp_name[0].'</h1></td>
-	    </tr>
-	    <tr>
-	   
-			<td colspan="5" align="right">'.$comp_name[1].'</td>
-	    </tr>
-		<tr>
-		    <td colspan="5" align="right"><font size="-3">'.$comp_name[2].'</font></td>
-			
-		</tr>
-		<tr>
-		   <td colspan="5" align="right"><font size="-3">'.$comp_name[3].'</font></td>
-		</tr>
+	   <tr><td colspan="3"></td><td colspan="2"><img height="110" src="/image/logo.jpg" /> </td></tr>
 	    <tr>
 	       <td colspan="5" height="40"></td>
 	    </tr> 
