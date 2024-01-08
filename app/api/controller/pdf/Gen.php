@@ -87,7 +87,7 @@ class Gen extends Controller
 
     //设置是否自动分页  距离底部多少距离时分页
 
-    $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+    $pdf->SetAutoPageBreak(false, '5');
 
     // 设置字体
 	
@@ -166,9 +166,9 @@ class Gen extends Controller
 	        <th></th>
 			<th></th>
 	    </tr>
-	   <tr><td colspan="3"></td><td colspan="2"><img height="110" src="/image/logo.jpg" /> </td></tr>
+	   <tr><td colspan="2"></td><td colspan="3"><img height="110" src="/image/logo.jpg" /> </td></tr>
 	    <tr>
-	       <td colspan="5" height="40"></td>
+	       <td colspan="5" height="20"></td>
 	    </tr> 
 	 
 		<tr>
