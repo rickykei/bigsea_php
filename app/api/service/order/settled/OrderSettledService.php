@@ -170,6 +170,8 @@ abstract class OrderSettledService extends BaseService
 		else
 		$table_no='';
 		
+		 
+		
         if (isset($this->params['table_id']) && ($this->params['table_id'])) {
             $table = TableModel::detail($this->params['table_id']);
             $table_no = $table['table_no'];

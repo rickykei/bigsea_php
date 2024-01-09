@@ -36,6 +36,8 @@ class Order extends Controller
 			 
 		}
 		//ric
+		if (isset($params['mytableno']))
+		$table_no=$params['mytableno'];
 		
 		// 商品结算信息
 		$CartModel = new CartModel();
@@ -45,8 +47,12 @@ class Order extends Controller
         $orderService = new MasterOrderSettledService($user, $productList, $params);
 		
 		
-        // 获取订单信息
+		
+       //ric use table no field as a car no. 20240109
         $orderInfo = $orderService->settlement();
+		if (isset($params['mytableno']))
+		$orderInfo['table_no']=$params['mytableno'];
+		//ric use table no field as a car no.
 		
 		//ric get cust_id from address obj
 		$um= new UserModel;
@@ -66,7 +72,7 @@ class Order extends Controller
         if ($orderService->hasError()) {
             return $this->renderError($orderService->getError());
         }
-        // 创建订单
+        // submit order to db
         $order_id = $orderService->createOrder($orderInfo);
         if (!$order_id) {
             return $this->renderError($orderService->getError() ?: '订单创建失败');
