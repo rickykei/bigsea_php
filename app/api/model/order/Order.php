@@ -76,7 +76,7 @@ class Order extends OrderModel
                 $model = $model->where('pay_status', '=', 20)->where('order_status', '=', 30);
                 break;
         }
-		// ricky
+		// ricky 202312
 		if ($user_id<10000){
 				return $model->with(['product.image', 'supplier','user','address']) 
 					->where('is_delete', '=', 0)

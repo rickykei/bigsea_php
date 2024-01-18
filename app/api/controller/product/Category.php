@@ -17,8 +17,16 @@ class Category extends Controller
      */
     public function index($type)
     {
+	 
         // 整理请求的参数
         $param = $this->postData();
+		
+		if (isset($param['zelda'])){
+		//	echo $param['zelda'];
+			//from catalog
+			 
+		}
+		
         if ($param['shop_supplier_id'] == 0) {//未选择门店传默认门店
             //获取默认门店id
             $supplier = (new SupplierModel)->getDefault($this->postData());
@@ -26,8 +34,10 @@ class Category extends Controller
         }
         //普通分类
         $commonList = CategoryModel::getApiALL($type, 0, $param['shop_supplier_id']);
-        //特殊分类
+		 
+        //特殊分类		
         $specialList = CategoryModel::getApiALL($type, 1, $param['shop_supplier_id']);
+		 
         $param['type'] = 'sell';
         // 获取列表数据
         $model = new ProductModel;

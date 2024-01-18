@@ -386,8 +386,8 @@ function checkToken($token, $type)
         JWT::$leeway = 60;//当前时间减去60，把时间留点余地
         $decoded = JWT::decode($token, new Key($key, 'HS256')); //HS256方式，这里要和签发的时候对应
         $arr = json_decode(json_encode($decoded), 1);
-        $res['code'] = 1;
-        $res['data'] = $arr['data'];
+		$res['code'] = 1;
+        $res['data'] = $arr['data']; 
         return $res;
     } catch (\Firebase\JWT\SignatureInvalidException $e) { //签名不正确
         $status['msg'] = "签名不正确";

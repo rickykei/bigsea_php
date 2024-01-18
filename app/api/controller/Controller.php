@@ -70,6 +70,8 @@ class Controller extends JjjController
             return false;
         }
         $data = checkToken($token, 'user');
+	 
+		
         if ($data['code'] != 1) {
             if ($is_force) {
                 throw new BaseException(['msg' => $data['msg'], 'code' => -1]);

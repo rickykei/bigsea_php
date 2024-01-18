@@ -94,8 +94,10 @@ class Category extends BaseModel
                 ->where('shop_supplier_id', '=', $shop_supplier_id)
                 ->select();
             $all = !empty($data) ? $data->toArray() : [];
+		 
             Cache::tag('cache')->set('category_api_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special, $all);
         }
+		 
         return Cache::get('category_api_' . $shop_supplier_id . '_' . $model::$app_id . $type . $is_special);
     }
 
