@@ -97,7 +97,34 @@ class Cart extends CartModel
         }
 
     }
+    /**
+     * 加入购物车 by manual input box
+     */
+    public function addByManual($data, $user)
+    {
+        //判断是否营业
+        $business = (new SupplierModel)->supplierState($data['shop_supplier_id'], $data['dinner_type']);
+        if (!$business) {
+            return false;
+        }
+        //判断商品是否下架
+        $product = $this->productState($data['product_id']);
+        if (!$product) {
+            $this->error = '商品已下架';
+            return false;
+        }
+        //判断是否存在
+        $cart_id = $this->isExist($data, $user);
+        if ($cart_id) {
+            return $this->where('cart_id', '=', $cart_id)->update(['product_num'=> $data['product_num']]);
+        } else {
+            $data['describe'] = trim($data['describe'], ';');
+            $data['user_id'] = $user['user_id'];
+            $data['app_id'] = self::$app_id;
+            return $this->save($data);
+        }
 
+    }
     /**
      * 判断购物车商品是否存在
      */

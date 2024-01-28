@@ -56,6 +56,22 @@ class Cart extends Controller
         $cartInfo = $this->model->getCartPrice($data, $this->user);
         return $this->renderSuccess('加入购物车成功', ['cartInfo' => $cartInfo]);
     }
+    /**
+     * 加入购物车 by manual input box
+     * @param int $product_id 商品id
+     * @param int $product_num 商品数量
+     */
+    public function addByManual()
+    { 
+        $data = $this->request->param();
+        $model = $this->model;
+        if (!$model->addByManual($data, $this->user)) {
+            return $this->renderError($model->getError() ?: '更改cart 中產品失敗');
+        }
+        //购物车金额
+        $cartInfo = $this->model->getCartPrice($data, $this->user);
+        return $this->renderSuccess('更改cart 中產品數量成功', ['cartInfo' => $cartInfo]);
+    }
 
     /**
      * 商品列表加减数量

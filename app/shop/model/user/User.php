@@ -67,7 +67,7 @@ class User extends UserModel
         }
         // 获取用户列表
         return $model->where('is_delete', '=', '0')
-            ->order(['create_time' => 'desc'])
+            ->order(['user_id' => 'desc'])
             ->hidden(['open_id', 'union_id'])
             ->paginate($data);
     }
