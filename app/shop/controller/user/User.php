@@ -158,11 +158,11 @@ class User extends Controller
   
   public function getEditBaseData($user_id)
   {
-	 
+ 
 		//get user table form.user
 		 $user = UserModel::detail($user_id);
 		//get user address table form.address
-		 UserAddressModel
+		  
 		// get setting region table  form.region
 		// get请求 get regoin base
 		

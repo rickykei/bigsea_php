@@ -28,7 +28,7 @@ class User extends BaseModel
      */
     public function address()
     {
-        return $this->hasOne('app\\common\\model\\user\\UserAddress', 'address_id', 'address_id');
+        return $this->hasOne('app\\common\\model\\user\\UserAddress', 'user_id', 'user_id');
     }
 
     /**
