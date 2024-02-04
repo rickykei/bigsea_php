@@ -17,6 +17,23 @@ use app\common\service\order\OrderCompleteService;
  */
 class Order extends OrderModel
 {
+	
+	public function getListByCarNoDate($dataType, $data = null)
+	{
+		 
+	    $model = $this;
+	    // 检索查询条件
+	    //$model = $model->setWhere($model, $data);
+	    // 获取数据列表
+	    return $model->with(['product' => ['image'], 'user'])
+	        ->order(['create_time' => 'desc'])
+	        ->where('table_no','=', $data['table_no'])
+			->where('mealtime', 'between', [$data['create_time'].' 00:00:00', $data['create_time'].' 23:00:00'])
+			->select();
+			
+			 
+	}
+	
     /**
      * 订单列表
      */

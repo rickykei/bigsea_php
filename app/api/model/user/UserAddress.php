@@ -140,6 +140,7 @@ class UserAddress extends UserAddressModel
     /**
      * 收货地址详情
      */
+	 
     public static function detail($user_id, $address_id)
     {
 		
@@ -147,5 +148,5 @@ class UserAddress extends UserAddressModel
 	    $where = ['address_id' => $address_id];
         return static::where($where)->find();
     }
-
+     
 }

@@ -149,10 +149,36 @@ class User extends Controller
   public function editUserAddress($user_id)
   { 
   
+   //get user address data
   	if ($this->request->isGet()) {
   	    return $this->getEditBaseData($user_id);
   	}
+	
+	//post method edit user address data
+  	  $data = json_decode($this->postData()['params'], true);
+  	  $user = $data['user'];
+  	  $userAddress = $data['user']['address'] ;
+	   
   	  
+	  if (isset($user)){ 
+  	  		$model = UserModel::detail($user['user_id']);
+  	  	//$model = new UserModel;
+  	  	 
+  	  	// 更改记录
+  	  	if ($model->edit($user)) {
+			$modelAddress =  UserAddressModel::detail($userAddress['address_id']);
+  	  		//$modelAddress = new UserAddressModel;
+  	  		
+  	  		 // 更改记录
+  	  		if ($modelAddress->edit($userAddress)) {
+  	  			return $this->renderSuccess('修改成功');
+  	  		}else{
+  	  			return $this->renderError($modelAddress>getError() ?: '添加失败');
+  	  		}
+  	  		 
+  	  	}
+		
+  	  } 
       
   }
   

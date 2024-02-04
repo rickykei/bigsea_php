@@ -103,7 +103,9 @@ class Address extends Controller
     public function setDefault($address_id)
     {
         $user = $this->getUser();
+		 
 		$model = UserAddress::detail($user['user_id'], $address_id);
+		 
         if ($model->setDefault($user)) {
             return $this->renderSuccess('设置成功');
         }

@@ -9,4 +9,6 @@ class UserAddress extends BaseModel
 {
     protected $name = 'user_address';
     protected $pk = 'address_id';
+	
+
 }

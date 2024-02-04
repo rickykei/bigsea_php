@@ -228,7 +228,8 @@ class Gen extends Controller
 
     exit();
 
-}
+	}
+	
    public function pdf()
     {
 		

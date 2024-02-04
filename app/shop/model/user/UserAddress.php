@@ -17,5 +17,25 @@ class UserAddress extends UserAddressModel
 	    return $this->save($data);
 	}
 	
+	public function edit($data)
+	{
+		$data['create_time'] = strtotime($data['create_time']);
+		$data['update_time'] = time();
+	    return $this->save($data);
+	}
+	/**
+	 * 获取用户信息
+	 */
+	public static function detail($where)
+	{
+	    $model = new static;
+	   
+	    if (is_array($where)) {
+	        $filter = array_merge($filter, $where);
+	    } else {
+	        $filter['address_id'] = (int)$where;
+	    }
+	    return $model->where($filter)->find();
+	}
 
 }
