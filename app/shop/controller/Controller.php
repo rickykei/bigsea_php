@@ -64,7 +64,7 @@ class Controller extends JjjController
         }
         $AuthService = new AuthService($this->store);
         if (!$AuthService->checkPrivilege($this->routeUri)) {
-            throw new BaseException(['msg' => '很抱歉，没有访问权限']);
+		    throw new BaseException(['msg' => '很抱歉，没有访问权限']);
         }
         return true;
     }

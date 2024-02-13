@@ -6,6 +6,9 @@ use app\shop\controller\Controller;
 use app\shop\model\order\Order as OrderModel;
 use app\common\enum\settings\DeliveryTypeEnum;
 use app\common\model\settings\Setting as SettingModel;
+use app\shop\model\product\Category as CategoryModel;
+use app\shop\model\product\Product as ProductModel;
+use app\common\library\helper;
 
 /**
  * 订单控制器
@@ -51,6 +54,27 @@ class Order extends Controller
         if (isset($detail['delivery_time']) && $detail['delivery_time'] != '') {
             $detail['delivery_time'] = date('Y-m-d H:i:s', $detail['delivery_time']);
         }
-        return $this->renderSuccess('', compact('detail'));
+		
+		//get category. product  ricky 20240212
+		    $param['shop_supplier_id']=10001;
+			$param['type'] = 'sell';
+			//普通分类
+			$commonList = helper::arrayColumn2Key(CategoryModel::getApiALL(0, 0, 10001), 'category_id');
+			 
+		 
+			 // 获取列表数据
+			 $model = new ProductModel;
+			 foreach ($commonList as &$c) {
+			     $param['category_id'] = $c['category_id'];
+			     $c['products'] = helper::arrayColumn2Key($model->getList($param),'product_id');
+			 }
+			 
+			  
+			 $category = $commonList;
+		//	get category. product  ricky 20240212
+		
+        return $this->renderSuccess('', compact('detail','category'));
     }
+	
+	 
 }

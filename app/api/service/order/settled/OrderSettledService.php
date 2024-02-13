@@ -378,6 +378,7 @@ abstract class OrderSettledService extends BaseService
                 'total_num' => $product['product_num'],
                 'total_price' => $product['total_price'],
                 'total_pay_price' => $product['total_pay_price'],
+				'product_unit' => $product['product_unit'],
             ];
             $productList[] = $item;
         }

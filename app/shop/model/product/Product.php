@@ -186,5 +186,29 @@ class Product extends ProductModel
             ->where('is_delete', '=', 0)
             ->count();
     }
+    /**
+     * 获取商品列表
+     */
+    public function getList($param, $userInfo = false)
+    {
+        // 获取商品列表
+        $data = parent::getList($param, 1);
 
+        // 隐藏api属性
+		//ricky 20231224
+        //!$data->isEmpty() && $data->hidden(['content', 'image']);
+        // 整理列表数据并返回
+        $param['userInfo'] = $userInfo;
+        return $this->setProductListDataFromApi($data, true, $param);
+    }
+	
+	/**
+	 * 设置商品展示的数据 api模块
+	 */
+	private function setProductListDataFromApi(&$data, $isMultiple, $param)
+	{
+	    return parent::setProductListData($data, $isMultiple);
+	}
+	
+	 
 }

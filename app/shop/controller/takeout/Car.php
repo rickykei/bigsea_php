@@ -49,11 +49,9 @@ class Car extends Controller
 	 $list = $model->getListByCarNoDate($dataType, $data);
  
  
-     //return $this->renderSuccess('', compact('list'));  
+     // return $this->renderSuccess('', compact('list'));  
 		
 	 
-		$title = 'pdf';
-		
 		//search order records
 		//search order itesm
 		 $this->setPdf($data,$list);
@@ -165,7 +163,7 @@ class Car extends Controller
 		foreach($list as $row) {
 				$order_id=$row['order_id'];
 				foreach($row['product'] as $prow ){
-					$tmp_html=$tmp_html."<tr><td>".$i++."</td><td>".$prow['product_name']."</td><td>".$prow['total_num']."</td><td> </td><td>".$order_id."</td></tr>";
+					$tmp_html=$tmp_html."<tr><td>".$i++."</td><td>".$prow['product_name']."</td><td>".$prow['total_num']."</td><td>".$prow['product_unit']."</td><td>".$order_id."</td></tr>";
 				}
 		}
 	 
