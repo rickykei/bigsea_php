@@ -25,11 +25,16 @@ class Order extends OrderModel
 	    // 检索查询条件
 	    //$model = $model->setWhere($model, $data);
 	    // 获取数据列表
-	    return $model->with(['product' => ['image'], 'user'])
-	        ->order(['create_time' => 'desc'])
-	        ->where('table_no','=', $data['table_no'])
-			->where('mealtime', 'between', [$data['create_time'].' 00:00:00', $data['create_time'].' 23:00:00'])
-			->select();
+		//return $model->with(['product' => ['image'], 'user'])
+	    return $model
+		->alias('order')
+		->field(['order.*','sum(total_num) as total_num ,p.product_id as product_id, product_name as product_name,p.product_unit as product_unit'])
+		->leftjoin('order_product p','order.order_id = p.order_id')
+	    ->order(['order.create_time' => 'desc'])
+	    ->where('table_no','=', $data['table_no'])
+		->where('mealtime', '=', $data['create_time']) 
+		->group("p.product_id")
+		->select();
 			
 			 
 	}

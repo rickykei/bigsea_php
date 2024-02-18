@@ -66,7 +66,7 @@ class Order extends Controller
 			 $model = new ProductModel;
 			 foreach ($commonList as &$c) {
 			     $param['category_id'] = $c['category_id'];
-			     $c['products'] = helper::arrayColumn2Key($model->getList($param),'product_id');
+			     $c['products'] = helper::arrayColumn2Key($model->getList2($param),'product_id');
 			 }
 			 
 			  

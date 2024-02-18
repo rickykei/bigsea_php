@@ -189,7 +189,7 @@ class Product extends ProductModel
     /**
      * 获取商品列表
      */
-    public function getList($param, $userInfo = false)
+    public function getList2($param, $userInfo = false)
     {
         // 获取商品列表
         $data = parent::getList($param, 1);

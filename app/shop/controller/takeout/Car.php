@@ -37,14 +37,15 @@ class Car extends Controller
 		$param = $this->request->param();
 		$car_no = $param['car_no'];
 		$create_time= $param['create_time'];
-		if (isset($car_no) && isset($create_time)){
+		$ampm= $param['ampm'];
+		if (isset($car_no) && isset($create_time) && isset($ampm)){
 			
 			
      // 订单列表
      $model = new OrderModel();
      $data['table_no']=$car_no;
      $data['order_type'] = 0;
-	  $data['create_time']=$create_time;
+	 $data['create_time']=$create_time." ".$ampm;
      $data['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
 	 $list = $model->getListByCarNoDate($dataType, $data);
  
@@ -154,25 +155,32 @@ class Car extends Controller
 		$tmp_html="<table> ";
 		
 		$tmp_html=$tmp_html."<tr><td>提貨車號 : </td><td>".$data['table_no']."</td></tr>";
-		$tmp_html=$tmp_html."<tr><td>提貨日期 : </td><td>".$data['create_time']."</td></tr>";
+		//$tmp_html=$tmp_html."<tr><td>提貨日期 : </td><td>".$data['create_time']."</td></tr>";
+		if ($data['create_time']!="")
+			if (substr($data['create_time'], -5)=='09:00')
+					$tmp_html=$tmp_html."<tr><td>提貨日期 : </td><td>".$data['create_time']." 上午</td></tr>";
+					else
+					$tmp_html=$tmp_html."<tr><td>提貨日期 : </td><td>".$data['create_time']." 下午</td></tr>";
+					
+			
 		$tmp_html=$tmp_html."</table><table><tr><td> </td></tr></table>";
 		$tmp_html=$tmp_html."<table> ";
-		$tmp_html=$tmp_html."<tr><th>No.</th><th>產品名稱及內容</th><th>數量</th><th>單位</th><th>Invoice No.</th></tr>";
+		$tmp_html=$tmp_html."<tr><th>No.</th><th>產品名稱及內容</th><th style=\"text-align: center; vertical-align: middle;\">數量</th><th style=\"text-align: center; vertical-align: middle;\">單位</th></tr>";
 		
 		$i=1;
-		foreach($list as $row) {
-				$order_id=$row['order_id'];
-				foreach($row['product'] as $prow ){
-					$tmp_html=$tmp_html."<tr><td>".$i++."</td><td>".$prow['product_name']."</td><td>".$prow['total_num']."</td><td>".$prow['product_unit']."</td><td>".$order_id."</td></tr>";
-				}
+	 
+		foreach($list as $prow ){
+					$tmp_html=$tmp_html."<tr><td>".$i++."</td><td>".$prow['product_name']."[".$prow['product_id']."]</td><td style=\"text-align: center; vertical-align: middle;\">".$prow['total_num']."</td><td style=\"text-align: center; vertical-align: middle;\">".$prow['product_unit']."</td></tr>";
 		}
-	 
-	 
+		 
+	 $tmp_html=$tmp_html."</table> ";
+	 //header('Content-Type: application/json; charset=utf-8');
+	 //echo json_encode($list);
 		$pdf->writeHTML($tmp_html, true, false, true, false, '');
 		  
 	    //PDF输出的方式。I，在浏览器中打开；D，以文件形式下载；F，保存到服务器中；S，以字符串形式输出；E：以邮件的附件输出。
 	
-	    $pdf->Output(date("Ymd_His").".pdf", 'I');
+	   $pdf->Output(date("Ymd_His").".pdf", 'I');
 	
 	    exit();
 	
