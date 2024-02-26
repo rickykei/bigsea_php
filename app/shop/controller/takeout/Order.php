@@ -46,6 +46,11 @@ class Order extends Controller
      */
     public function detail($order_id)
     {
+		
+		// get请求 拿單detail
+		if ($this->request->isGet()) {
+		     
+		
         // 订单详情
         $detail = OrderModel::detail($order_id);
         if (isset($detail['pay_time']) && $detail['pay_time'] > 0) {
@@ -59,21 +64,49 @@ class Order extends Controller
 		    $param['shop_supplier_id']=10001;
 			$param['type'] = 'sell';
 			//普通分类
-			$commonList = helper::arrayColumn2Key(CategoryModel::getApiALL(0, 0, 10001), 'category_id');
+			$category = helper::arrayColumn2Key(CategoryModel::getApiALL(0, 0, 10001), 'category_id');
 			 
 		 
 			 // 获取列表数据
 			 $model = new ProductModel;
-			 foreach ($commonList as &$c) {
+			 foreach ($category as &$c) {
 			     $param['category_id'] = $c['category_id'];
 			     $c['products'] = helper::arrayColumn2Key($model->getList2($param),'product_id');
-			 }
-			 
-			  
-			 $category = $commonList;
+				// $c['products'] = $model->getList2($param);
+				 
+			 } 
+			
 		//	get category. product  ricky 20240212
 		
         return $this->renderSuccess('', compact('detail','category'));
+		}
+		
+		//post请求 post order edit detail
+		
+		$data = json_decode($this->postData()['params'], true);
+		 
+		// echo "order_id=".$order_id;
+		 $data['new_product_list']=$data['product'];
+		// Get订单信息
+		$model = OrderModel::detail($order_id);
+		
+		//echo "model";
+	 
+		$data['old_product_list']=$model['product'];
+		$data['app_id']=$model['app_id'];
+		//print_r($data['old_order']['product'][1]['product_id']);
+		//print_r($data['old_order']['product'][1]['product_sku_id']);
+		
+		//print_r($data['product'][0]['product_id']);
+		
+		if ($model->orderEdit($data)) {
+			
+			 return $this->renderSuccess("更新單頭 更新貨件 成功");
+		}  
+		  
+		 
+			
+		return $this->renderError($model->getError() ?: '更新失败');
     }
 	
 	 

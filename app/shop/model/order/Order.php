@@ -11,6 +11,8 @@ use app\common\service\product\factory\ProductFactory;
 use app\shop\service\order\ExportService;
 use app\common\model\settings\Setting as SettingModel;
 use app\common\service\order\OrderCompleteService;
+use app\shop\model\order\OrderProduct as OrderProductModel;
+use app\shop\model\product\Product as ProductModel;
 
 /**
  * 订单模型
@@ -300,5 +302,76 @@ class Order extends OrderModel
         return count($userIds);
     }
 
+
+ /**
+     * 编辑商品
+     */
+    public function orderEdit($data)
+    { 
+		 return $this->transaction(function () use ($data) {
+			// update invoice header
+			$this->save($data); 
+			// cancel invoice.product 
+			// 回退商品库存
+			// echo $this['order_source']; 10
+			
+			//echo $this['old_product_list'][1]['product_id'];
+			//echo $this['old_product_list'][1]['total_num'];
+			//echo "new";
+			//echo $data['new_product_list'][0]['product_id'];
+		
+			
+			//add back stock to those delete items
+			ProductFactory::getFactory($this['order_source'])->backProductStock($data['old_product_list'], true);
+			
+			// delete order.product where order.id=
+			 
+			OrderProductModel::destroy(function($query) use ($data){
+			     $query->where('order_id','=',$data['order_id']);
+			});
+			 
+			
+		 
+			
+		 
+			// add new product item back to db
+			foreach ($data['new_product_list'] as $product) {
+				$p = ProductModel::detail($product['product_id']);
+				
+				 
+			    $item = [
+			        'order_id' => $data['order_id'],
+			        'user_id' => $data['user_id'],
+			        'app_id' => $data['app_id'],
+			        'product_id' => $product['product_id'],
+			        'product_name' => $p['product_name'],
+			        'image_id' => $p['logo']['image_id'],
+			        'deduct_stock_type' => $p['deduct_stock_type'],
+			        'spec_type' => $p['spec_type'],
+			        'product_sku_id' => $product['product_id'],
+			        'product_attr' => $p['product_attr'],
+			        'content' => $p['content'],
+			        'product_price' => $p['product_price'],
+			        'line_price' => $p['line_price'],
+			        'total_num' => $product['total_num'],
+			        'total_price' => $product['total_num']*$p['product_price'],
+			        'total_pay_price' => $product['total_num']*$p['product_price'],
+					'product_unit' =>  $p['product_unit'],
+					'category_id' =>  $p['category_id'],
+			    ];
+			    $productList[] = $item;
+			}
+				 
+			$model = new OrderProduct();
+			//print_r($productList);
+			$model->saveAll($productList);
+		 
+			// re-insert new invoice. prorduct
+			  
+			return true;
+		 });
+		 
+		   
+    }
 
 }

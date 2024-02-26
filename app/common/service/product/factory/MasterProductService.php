@@ -97,6 +97,7 @@ class MasterProductService extends ProductService
         $productData = [];
         $productSkuData = [];
         foreach ($productList as $product) {
+			
             $product_item = [
                 'where' => [
                     'product_id' => $product['product_id'],
