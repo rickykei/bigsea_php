@@ -165,12 +165,13 @@ class Car extends Controller
 			
 		$tmp_html=$tmp_html."</table><table><tr><td> </td></tr></table>";
 		$tmp_html=$tmp_html."<table> ";
-		$tmp_html=$tmp_html."<tr><th>No.</th><th>產品名稱及內容</th><th style=\"text-align: center; vertical-align: middle;\">數量</th><th style=\"text-align: center; vertical-align: middle;\">單位</th></tr>";
+		$tmp_html=$tmp_html."<tr><th style=\"width:30px\">No.</th><th style=\"width:280px\">產品名稱及內容</th><th style=\"text-align: center; vertical-align: middle;\">數量</th><th style=\"text-align: center; vertical-align: middle;\">單位</th></tr>";
 		
 		$i=1;
 	 
 		foreach($list as $prow ){
-					$tmp_html=$tmp_html."<tr><td>".$i++."</td><td>".$prow['product_name']."[".$prow['product_id']."]</td><td style=\"text-align: center; vertical-align: middle;\">".$prow['total_num']."</td><td style=\"text-align: center; vertical-align: middle;\">".$prow['product_unit']."</td></tr>";
+					$tmp_html=$tmp_html."<tr><td>".$i++."</td><td>".$prow['product_name']."[".trim(strip_tags($prow['product_content']))."]</td><td style=\"text-align: center; vertical-align: middle;\">".$prow['total_num']."</td><td style=\"text-align: center; vertical-align: middle;\">".$prow['product_unit']."</td></tr>";
+					//$tmp_html=$tmp_html."<tr><td></td><td>".."</td><td style=\"text-align: center; vertical-align: middle;\"></td><td style=\"text-align: center; vertical-align: middle;\"></td></tr>";
 		}
 		 
 	 $tmp_html=$tmp_html."</table> ";

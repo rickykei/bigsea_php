@@ -86,7 +86,7 @@ class Order extends Controller
 		$data = json_decode($this->postData()['params'], true);
 		 
 		// echo "order_id=".$order_id;
-		 $data['new_product_list']=$data['product'];
+		
 		// Get订单信息
 		$model = OrderModel::detail($order_id);
 		
@@ -94,6 +94,8 @@ class Order extends Controller
 	 
 		$data['old_product_list']=$model['product'];
 		$data['app_id']=$model['app_id'];
+		
+		 $data['new_product_list']=$data['product'];
 		//print_r($data['old_order']['product'][1]['product_id']);
 		//print_r($data['old_order']['product'][1]['product_sku_id']);
 		

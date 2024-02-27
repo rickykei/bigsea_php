@@ -115,9 +115,15 @@ class Cart extends CartModel
         }
         //判断是否存在
         $cart_id = $this->isExist($data, $user);
-        if ($cart_id) {
-            return $this->where('cart_id', '=', $cart_id)->update(['product_num'=> $data['product_num']]);
-        } else {
+        if ($cart_id && $data['product_num'] == 0) {
+			//if app send 0 qty to cart 20240227 
+			    return $this->where('cart_id', '=', $cart_id)->delete();
+				
+		}else if ($cart_id && $data['product_num'] >0) {
+			 
+				return $this->where('cart_id', '=', $cart_id)->update(['product_num'=> $data['product_num']]);
+			
+        } else if ($data['product_num'] >0) {
             $data['describe'] = trim($data['describe'], ';');
             $data['user_id'] = $user['user_id'];
             $data['app_id'] = self::$app_id;

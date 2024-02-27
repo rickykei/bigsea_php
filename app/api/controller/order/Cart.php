@@ -65,8 +65,9 @@ class Cart extends Controller
     { 
         $data = $this->request->param();
         $model = $this->model;
-        if (!$model->addByManual($data, $this->user)) {
-            return $this->renderError($model->getError() ?: '更改cart 中產品失敗');
+       
+		if (!$model->addByManual($data, $this->user)) {
+         //   return $this->renderError($model->getError() ?: '更改cart 中產品失敗');
         }
         //购物车金额
         $cartInfo = $this->model->getCartPrice($data, $this->user);
