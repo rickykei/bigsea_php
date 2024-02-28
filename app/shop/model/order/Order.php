@@ -30,10 +30,11 @@ class Order extends OrderModel
 		//return $model->with(['product' => ['image'], 'user'])
 	    return $model
 		->alias('order')
-		->field(['order.*','sum(total_num) as total_num ,p.product_id as product_id, product_name as product_name, content as product_content, p.product_unit as product_unit'])
+		->field(['order.*','sum(total_num) as total_num ,p.product_id as product_id, p.product_name as product_name,
+		  p.category_id as category_id, content as product_content, p.product_unit as product_unit'])
 		->leftjoin('order_product p','order.order_id = p.order_id')
-	    ->order(['order.create_time' => 'desc'])
-	    ->where('table_no','=', $data['table_no'])
+	    ->order(['p.category_id' => 'desc'])
+		->where('table_no','=', $data['table_no'])
 		->where('mealtime', '=', $data['create_time']) 
 		->group("p.product_id")
 		->select();

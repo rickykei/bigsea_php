@@ -152,7 +152,7 @@ class Car extends Controller
 	 $pdf->AddPage();
 		
 		$page_pointer=0;
-		$tmp_html="<table> ";
+		$tmp_html=" <table > ";
 		
 		$tmp_html=$tmp_html."<tr><td>提貨車號 : </td><td>".$data['table_no']."</td></tr>";
 		//$tmp_html=$tmp_html."<tr><td>提貨日期 : </td><td>".$data['create_time']."</td></tr>";
@@ -164,24 +164,25 @@ class Car extends Controller
 					
 			
 		$tmp_html=$tmp_html."</table><table><tr><td> </td></tr></table>";
-		$tmp_html=$tmp_html."<table> ";
-		$tmp_html=$tmp_html."<tr><th style=\"width:30px\">No.</th><th style=\"width:280px\">產品名稱及內容</th><th style=\"text-align: center; vertical-align: middle;\">數量</th><th style=\"text-align: center; vertical-align: middle;\">單位</th></tr>";
+		$tmp_html=$tmp_html."<table border=\"1\"> ";
+		$tmp_html=$tmp_html."<tr style=\"border-bottom:2px solid black\" ><th style=\"width:30px\">No.</th><th style=\"width:350px\">產品名稱及內容</th><th style=\"width:50px; text-align: center; vertical-align: middle;\">數量</th><th style=\"width:50px;text-align: center; vertical-align: middle;\">單位</th></tr>";
 		
 		$i=1;
 	 
 		foreach($list as $prow ){
-					$tmp_html=$tmp_html."<tr><td>".$i++."</td><td>".$prow['product_name']."[".trim(strip_tags($prow['product_content']))."]</td><td style=\"text-align: center; vertical-align: middle;\">".$prow['total_num']."</td><td style=\"text-align: center; vertical-align: middle;\">".$prow['product_unit']."</td></tr>";
+					$tmp_html=$tmp_html."<tr style=\"border-bottom: 2px solid black;\"><td style=\"height:20px\" >".$i++."</td><td>".$prow['product_name']."[".trim(strip_tags($prow['product_content']))."]</td><td style=\"text-align: center; vertical-align: middle;\">".$prow['total_num']."</td><td style=\"text-align: center; vertical-align: middle;\">".$prow['product_unit']."</td></tr>";
 					//$tmp_html=$tmp_html."<tr><td></td><td>".."</td><td style=\"text-align: center; vertical-align: middle;\"></td><td style=\"text-align: center; vertical-align: middle;\"></td></tr>";
 		}
 		 
 	 $tmp_html=$tmp_html."</table> ";
 	 //header('Content-Type: application/json; charset=utf-8');
 	 //echo json_encode($list);
+	 //echo $tmp_html;
 		$pdf->writeHTML($tmp_html, true, false, true, false, '');
-		  
+		$pdf->Output(date("Ymd_His").".pdf", 'I');  
 	    //PDF输出的方式。I，在浏览器中打开；D，以文件形式下载；F，保存到服务器中；S，以字符串形式输出；E：以邮件的附件输出。
 	
-	   $pdf->Output(date("Ymd_His").".pdf", 'I');
+	   
 	
 	    exit();
 	
