@@ -322,8 +322,8 @@ class Order extends OrderModel
 			//echo $data['new_product_list'][0]['product_id'];
 		
 			
-			//add back stock to those delete items
-			ProductFactory::getFactory($this['order_source'])->backProductStock($data['old_product_list'], true);
+			//add back stock for those deleted (orginal order)items
+		 ProductFactory::getFactory($this['order_source'])->backProductStock($data['old_product_list'], false);
 			
 			// delete order.product where order.id=
 			 
@@ -368,6 +368,10 @@ class Order extends OrderModel
 			$model->saveAll($productList);
 		 
 			// re-insert new invoice. prorduct
+			
+			//add back stock for those new order items
+		  $new_product_list= OrderModel::detail($data['order_id']);
+			ProductFactory::getFactory($this['order_source'])->updateProductStock($new_product_list);
 			  
 			return true;
 		 });
