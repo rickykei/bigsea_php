@@ -46,8 +46,8 @@ class UserAddress extends UserAddressModel
 		   $um= new UserModel;
 	 
 		foreach ($list as $key => &$rec) {
-				$data['uid']=$rec['user_id'];
-			 
+				$data['uid']=$rec['user_id']; 
+				 
 				$cust_data = $um->getUser($data);
 				$rec['nickName']=$cust_data['nickName'];
 		}

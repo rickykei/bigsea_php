@@ -35,6 +35,7 @@ class Address extends Controller
 		$model = new UserAddress;
 		  
 		if ($region_id!='' && $region_id!=0){
+			 
 			$list = $model->listByRegionId($user['user_id'], $shop_supplier_id,$region_id);
 		}else if ($cust_id!='' && $cust_id!=0){
 			$list = $model->listByCustId($user['user_id'], $shop_supplier_id,$cust_id);

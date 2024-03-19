@@ -36,6 +36,7 @@ class Order extends OrderModel
 	    ->order(['p.category_id' => 'desc'])
 		->where('table_no','=', $data['table_no'])
 		->where('mealtime', '=', $data['create_time']) 
+		->where('order_status', '=','10') 
 		->group("p.product_id")
 		->select();
 			

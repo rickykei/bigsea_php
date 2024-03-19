@@ -116,7 +116,7 @@ class Car extends Controller
 	
 	    // 设置行高
 	
-	    $pdf->setCellHeightRatio(1);
+	    $pdf->setCellHeightRatio(1.1);
 	
 	    // 设置左、上、右的间距
 	
@@ -130,8 +130,8 @@ class Car extends Controller
 	
 	    // 设置字体
 		
-	    $pdf->SetFont('stsongstdlight', '', 14, '', true);
-		$pdf->AddFont('arialblack', '', 14, '', false);
+	    $pdf->SetFont('stsongstdlight', '', 15, '', true);
+		$pdf->AddFont('arialblack', '', 15, '', false);
 	    // 设置是否自动分页 距离底部多少距离时分页
 	
 	    //$pdf->SetAutoPageBreak(TRUE, '15');
@@ -163,19 +163,19 @@ class Car extends Controller
 					$tmp_html=$tmp_html."<tr><td>提貨日期 : </td><td>".$data['create_time']." 下午</td></tr>";
 					
 			
-		$tmp_html=$tmp_html."</table><table><tr><td> </td></tr></table>";
-		$tmp_html=$tmp_html."<table border=\"1\"> ";
-		$tmp_html=$tmp_html."<tr style=\"border-bottom:2px solid black\" ><th style=\"width:30px\">No.</th><th style=\"width:350px\">產品名稱及內容</th><th style=\"width:50px; text-align: center; vertical-align: middle;\">數量</th><th style=\"width:50px;text-align: center; vertical-align: middle;\">單位</th></tr>";
+		$tmp_html=$tmp_html."</table><table><tr><td > </td></tr></table>";
+		$tmp_html=$tmp_html."<table border=\"1\">";
+	  	$tmp_html=$tmp_html."<tr><td style=\"width:35px;valign: middle;line-height:24px;\">No.</td><td style=\"width:350px;valign: middle;line-height:24px; \">產品名稱及內容</td><td style=\"width:50px; text-align: center; valign: middle;line-height:24px;\">數量</td><td style=\"width:50px;text-align: center; valign: middle;line-height:24px;\">單位</td></tr>";
 		
 		$i=1;
 	 
 		foreach($list as $prow ){
-					$tmp_html=$tmp_html."<tr style=\"border-bottom: 2px solid black;\"><td style=\"height:20px\" >".$i++."</td><td>".$prow['product_name']."[".trim(strip_tags($prow['product_content']))."]</td><td style=\"text-align: center; vertical-align: middle;\">".$prow['total_num']."</td><td style=\"text-align: center; vertical-align: middle;\">".$prow['product_unit']."</td></tr>";
+					$tmp_html=$tmp_html."<tr><td style=\"valign: middle;line-height:24px;\" >".$i++."</td><td style=\"valign: middle;line-height:24px;\">".$prow['product_name']."[".trim(strip_tags($prow['product_content']))."]</td><td style=\"valign: middle;line-height:24px;text-align: center;\">".$prow['total_num']."</td><td style=\"text-align: center; valign: middle;line-height:24px\">".$prow['product_unit']."</td></tr>";
 					//$tmp_html=$tmp_html."<tr><td></td><td>".."</td><td style=\"text-align: center; vertical-align: middle;\"></td><td style=\"text-align: center; vertical-align: middle;\"></td></tr>";
 		}
 		 
 	 $tmp_html=$tmp_html."</table> ";
-	 //header('Content-Type: application/json; charset=utf-8');
+	// header('Content-Type: application/json; charset=utf-8');
 	 //echo json_encode($list);
 	 //echo $tmp_html;
 		$pdf->writeHTML($tmp_html, true, false, true, false, '');
