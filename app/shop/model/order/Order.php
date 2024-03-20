@@ -35,8 +35,10 @@ class Order extends OrderModel
 		->leftjoin('order_product p','order.order_id = p.order_id')
 	    ->order(['p.category_id' => 'desc'])
 		->where('table_no','=', $data['table_no'])
-		->where('mealtime', '=', $data['create_time']) 
+		//->where('mealtime', '=', $data['create_time']) 
+		->where('mealtime', '<=', date("Y-m-d H:i:s")) 
 		->where('order_status', '=','10') 
+		->where('order.order_id', '>=','3') 
 		->group("p.product_id")
 		->select();
 			

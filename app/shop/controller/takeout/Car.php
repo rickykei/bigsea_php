@@ -18,15 +18,30 @@ class Car extends Controller
 	/**
      * 订单列表
      */
-    public function index()
+    public function index($dataType = 'all')
     {
         // 订单列表
-        $model = new OrderDeliverModel();
-        $data = $this->postData();
-        $data['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
-        $list = $model->getList($data);
-        $deliver_source = DeliverySourceEnum::data();
-        return $this->renderSuccess('', compact('list', 'deliver_source'));
+			$param = $this->request->param();
+       		$car_no = $param['car_no'];
+       		$create_time= $param['create_time'];
+       		$ampm= $param['ampm'];
+       		if (isset($car_no) && isset($create_time) && isset($ampm)){ 
+       // 订单列表
+			$model = new OrderModel();
+			$data['table_no']=$car_no;
+			$data['order_type'] = 0;
+			$data['create_time']=$create_time." ".$ampm;
+			$data['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
+			$list = $model->getListByCarNoDate($dataType, $data);
+			
+        
+			return $this->renderSuccess('', compact('list'));  
+       		
+       
+       		//search order records
+       		//search order itesm
+       		  
+       		}
     }
 
     
