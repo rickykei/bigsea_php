@@ -82,6 +82,8 @@ class Order extends Controller
      */
     public function pay($order_id)
     {
+		
+		//3 user id echo "userID=".$this->user['user_id'];
         // 获取订单详情
         $model = OrderModel::getUserOrderDetail($order_id, $this->user['user_id']);
         $params = $this->postData();

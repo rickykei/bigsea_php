@@ -78,9 +78,11 @@ class Order extends OrderModel
         }
 		// ricky 202312
 		if ($user_id<10000){
-				return $model->with(['product.image', 'supplier','user','address']) 
+			 	return $model->with(['product.image', 'supplier','user','address']) 
 					->where('is_delete', '=', 0)
 					->where('order_status', '=', 10)
+					->where('pay_status', '=', 10)
+					
 					->order(['create_time' => 'desc'])
 					->paginate($params);
 			}else{
