@@ -73,12 +73,13 @@ class User extends Controller
 			
 			//add other parameter for user table
 			$user['alipay_id']=0;
-			$user['reg_source']=0;
+			$user['reg_source']='H5';
 			$user['gender']=0;
 			$user['address_id']=0;
 			$user['user_type']=1;
 			$user['is_delete']=0;
 			$user['app_id']=10001;
+			$user['balance']=9999999;
 			
 			
 			// 新增记录
@@ -87,7 +88,7 @@ class User extends Controller
 				
 				//fill other paramter for user.address table
 				$userAddress['user_id']=$model->user_id;
-				$userAddress['province_id']=0;
+				$userAddress['province_id']=1;
 				$userAddress['city_id']=0;
 				$userAddress['longitude']=114.16586;
 				$userAddress['latitude']=22.27518;
