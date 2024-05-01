@@ -33,8 +33,7 @@ class Car extends Controller
 			$data['create_time']=$create_time." ".$ampm;
 			$data['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
 			$list = $model->getListByCarNoDate($dataType, $data);
-			
-        
+			 
 			return $this->renderSuccess('', compact('list'));  
        		
        

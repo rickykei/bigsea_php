@@ -42,7 +42,11 @@ class Order extends Controller
     }
 
     /**
-     * 订单详情
+     * action : edit order
+	 * 
+	 * get : get order detail
+	 * 
+	 * post : post order modified detail
      */
     public function detail($order_id)
     {

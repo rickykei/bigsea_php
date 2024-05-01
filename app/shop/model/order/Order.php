@@ -30,22 +30,26 @@ class Order extends OrderModel
 		//return $model->with(['product' => ['image'], 'user'])
 	    return $model
 		->alias('order')
-		->field(['order.*','sum(total_num) as total_num ,p.product_id as product_id, p.product_name as product_name,
-		  p.category_id as category_id, content as product_content, p.product_unit as product_unit'])
+		->field(['order.*','sum(p.total_num) as total_num ,p.product_id as product_id, p.product_name as product_name,
+		  p.category_id as category_id, content as product_content, p.product_unit as product_unit, 0 as incar_qty_pm,
+			0 as incar_qty_am, 0 as diff, 0 as remaining'])
 		->leftjoin('order_product p','order.order_id = p.order_id')
 	    ->order(['p.category_id' => 'desc'])
 		->where('table_no','=', $data['table_no'])
-		//->where('mealtime', '=', $data['create_time']) 
+		->where('mealtime', '>=', $data['create_time'] .' 00:00:00') 
+		->where('mealtime', '<=', $data['create_time'] .' 23:59:59') 
 		//->where('mealtime', '<=', date("Y-m-d H:i:s")) 
-		->where('mealtime', '<=', $data['create_time']) 
+		//->where('mealtime', '<=', $data['create_time']) 
 		->where('order_status', '=','10') 
-		->where('pay_status', '=','10') 
-	 
+		->where('pay_status', '=','10')  
 		->group("p.product_id")
 		->select();
 			
 			 
 	}
+	
+	
+ 
 	
     /**
      * 订单列表

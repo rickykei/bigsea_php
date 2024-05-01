@@ -36,24 +36,31 @@ class Incar extends Controller
 	
 	public function add($dataType = 'all')
 	{
-		$param = $this->request->param();
-		 
-		$incar_time= $param['incar_time'];
-		$car_no= $param['car_no'];
-		$data['car_no']=$car_no;
-		$data['incar_time']=$incar_time." 00:00:00";
 		
-	     // get请求 拿當天車的訂貨數量
+		
+	     // 求 拿當天  訂貨 by product item. sum qty
 	     if ($this->request->isGet()) {
-	          
+	          $param = $this->request->param();
+	           
+	          $incar_time= $param['incar_time'];
+	          $car_no= $param['car_no'];
+	          $data['car_no']=$car_no;
+	          $data['incar_time']=$incar_time;
 		
 	   		if (isset($car_no) && isset($incar_time) ){ 
 			
-				$model = new IncarModel();
+				//$model = new IncarModel();
+				//$detail = $model->getInCarItemCountByCarNoDate($dataType, $data);
 				
-				$detail = $model->getInCarItemCountByCarNoDate($dataType, $data);
-			 
-	   		 
+				$model = new OrderModel();
+				$data['table_no']=$car_no;
+				$data['order_type'] = 0;
+				$data['create_time']=$incar_time;
+				$data['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
+				$product = $model->getListByCarNoDate($dataType, $data);  
+				$detail['car_no']=$car_no;
+				$detail['incar_time']=$incar_time;
+				$detail['product']=$product;
 	   		  
 	   		}
 			
@@ -73,6 +80,23 @@ class Incar extends Controller
 				 } 
 			return $this->renderSuccess('', compact('detail','category'));
 		}
+		
+		
+		//post请求 post order edit detail 
+		$data = json_decode($this->postData()['params'], true);
+		  
+			 
+		 
+		$data['app_id']='10001';
+		
+		$model = new IncarModel();
+		 if ($model->add($data)) {
+		     return $this->renderSuccess('添加成功');
+		 }
+		
+	 
+		
+		
 	} 
 			
 }

@@ -6,6 +6,7 @@ use app\common\model\incar\Incar as IncarModel;
 use app\common\service\product\factory\ProductFactory; 
 use app\shop\model\incar\IncarProduct as IncarProductModel;
 use app\shop\model\product\Product as ProductModel;
+use app\shop\model\order\Order as OrderModel;
 
 class Incar extends IncarModel
 {
@@ -43,4 +44,44 @@ class Incar extends IncarModel
 	    ->order(['p.id' => 'desc']) 
 		->select(); 
 	} 
+	
+	/**
+	 * 添加商品
+	 */
+	public function add($data)
+	{
+	    if (!isset($data['car_no']) || empty($data['incar_time'])) {
+	        $this->error = '請填車號及時間';
+	        return false;
+	    }
+	  
+	    $data['app_id'] = self::$app_id;
+	    // 开启事务
+	    $this->startTrans();
+	    try {
+	        // add incar order
+	        $this->save($data);
+	        // add incar 商品
+	        $this->addProduct($data);
+	      
+	        $this->commit();
+	        return true;
+	    } catch (\Exception $e) {
+	        $this->error = $e->getMessage();
+	        $this->rollback();
+	        return false;
+	    }
+	}
+	
+	private function addProduct($data)
+	{
+	    // 更新模式: 先删除所有规格
+	    $model = new IncarProductModel;
+	    $stock = 0;//总库存
+	    $product_price = 0;//价格
+	    $cost_price = 0;
+	    $bag_price = 0;
+	    $incarproduct=$data['product'];
+	    $model>save($incarproduct);
+	}
 }
