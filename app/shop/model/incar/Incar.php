@@ -4,9 +4,10 @@ namespace app\shop\model\incar;
 
 use app\common\model\incar\Incar as IncarModel;
 use app\common\service\product\factory\ProductFactory; 
-use app\shop\model\incar\IncarProduct as IncarProductModel;
+ 
 use app\shop\model\product\Product as ProductModel;
 use app\shop\model\order\Order as OrderModel;
+use app\shop\model\incar\IncarProduct as IncarProductModel;
 
 class Incar extends IncarModel
 {
@@ -21,9 +22,9 @@ class Incar extends IncarModel
 		//return $model->with(['product' => ['image'], 'user'])
 	    return $model
 		->alias('incar')
-		->field(['incar.*','p.product_id as product_id, p.product_name as product_name'])
-		->leftjoin('incar_product p','incar.id = p.incar_id')
-	    ->order(['p.id' => 'desc'])
+		->field(['incar.*'])
+		//->leftjoin('incar_product p','incar.incar_id = p.incar_id')
+	    ->order(['incar_id' => 'desc'])
 		//->where('car_no','=', $data['car_no']) 
 		//->where('incar_time', '<=', $data['incar_time'])  
 		->select(); 
@@ -40,8 +41,8 @@ class Incar extends IncarModel
 	    return $model
 		->alias('incar')
 		->field(['incar.*','p.product_id as product_id, p.product_name as product_name'])
-		->leftjoin('incar_product p','incar.id = p.incar_id')
-	    ->order(['p.id' => 'desc']) 
+		->leftjoin('incar_product p','incar.incar_id = p.incar_id')
+	    ->order(['p.incar_product_id' => 'desc']) 
 		->select(); 
 	} 
 	
@@ -61,9 +62,13 @@ class Incar extends IncarModel
 	    try {
 	        // add incar order
 	        $this->save($data);
+			 
+			
 	        // add incar 商品
-	        $this->addProduct($data);
-	      
+	       // $this->product()->saveAll($data['product']);
+		    $model = new IncarProductModel;
+	        $model->addProductList($this->incar_id, $data['product']);
+		  
 	        $this->commit();
 	        return true;
 	    } catch (\Exception $e) {
@@ -73,15 +78,5 @@ class Incar extends IncarModel
 	    }
 	}
 	
-	private function addProduct($data)
-	{
-	    // 更新模式: 先删除所有规格
-	    $model = new IncarProductModel;
-	    $stock = 0;//总库存
-	    $product_price = 0;//价格
-	    $cost_price = 0;
-	    $bag_price = 0;
-	    $incarproduct=$data['product'];
-	    $model>save($incarproduct);
-	}
+	 
 }

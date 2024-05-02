@@ -84,16 +84,17 @@ class Incar extends Controller
 		
 		//post请求 post order edit detail 
 		$data = json_decode($this->postData()['params'], true);
-		  
-			 
+		   
 		 
-		$data['app_id']='10001';
+	 
 		
 		$model = new IncarModel();
+		 
 		 if ($model->add($data)) {
 		     return $this->renderSuccess('添加成功');
 		 }
-		
+	 
+		return $this->renderError($model->getError() ?: '添加失败');
 	 
 		
 		

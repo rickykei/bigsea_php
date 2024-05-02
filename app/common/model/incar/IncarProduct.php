@@ -12,15 +12,8 @@ use app\common\library\helper;
  */
 class IncarProduct extends BaseModel
 {
-    protected $pk = 'id';
-    protected $name = 'incar_product';
-
-    /**
-     * 追加字段
-     * @var string[]
-     */
   
- 
+    protected $name = 'incar_product';
  
 
 }
