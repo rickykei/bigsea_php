@@ -12,6 +12,11 @@ use app\shop\model\incar\IncarProduct as IncarProductModel;
 class Incar extends IncarModel
 {
 	
+	/*
+	* 入車單 list  
+	*
+	*/
+   
 	public function getListByCarNoDate($dataType, $data = null)
 	{
 		 
@@ -30,6 +35,9 @@ class Incar extends IncarModel
 		->select(); 
 	}
 	 
+	 /* 入車單，prepare input form
+	 */
+	
 	 public function getInCarItemCountByCarNoDate($dataType, $data = null)
 	{
 		 
@@ -47,7 +55,7 @@ class Incar extends IncarModel
 	} 
 	
 	/**
-	 * 添加商品
+	 * 入車單, submit request
 	 */
 	public function add($data)
 	{
@@ -78,5 +86,31 @@ class Incar extends IncarModel
 	    }
 	}
 	
-	 
+	public function findLastIncarRecordId($car_no) 
+	{
+		$model = $this;
+		 
+		return $model
+		->alias('incar')
+		->field(['incar.*'])
+		->order(['incar.incar_time' => 'desc']) 
+		->where('car_no', '=', $car_no)
+		->limit('1')
+		->select(); 
+		 
+	}
+	
+	public function findDiffByLastIncarId($lastIncarRecordId)
+	{
+		$model = $this;
+		 
+		return $model
+		->alias('incar')
+		->field(['incar.*','p.product_id as product_id, p.diff as p_diff'])
+		->leftjoin('incar_product p','incar.incar_id = p.incar_id')
+		->where('incar.incar_id','=',$lastIncarRecordId)
+		->group("p.product_id")
+		->order(['p.incar_product_id' => 'desc']) 
+		->select(); 
+	}
 }
