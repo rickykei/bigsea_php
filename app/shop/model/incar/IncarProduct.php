@@ -9,6 +9,8 @@ use app\common\model\incar\IncarProduct as IncarProductModel;
  */
 class IncarProduct extends IncarProductModel
 {
+
+
   public function addProductList($incar_id, $product_list)
     {
         

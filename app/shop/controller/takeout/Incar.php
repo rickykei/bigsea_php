@@ -4,6 +4,7 @@ namespace app\shop\controller\takeout;
 
 use app\shop\controller\Controller; 
 use app\shop\model\incar\Incar as IncarModel;
+
 use app\shop\model\order\Order as OrderModel;
 use app\shop\model\product\Product as ProductModel;
 use app\common\library\helper;
@@ -55,12 +56,16 @@ class Incar extends Controller
 				// find last incar record and copy diff records to input form
 				$model = new IncarModel();
 				$list=$model->findLastIncarRecordId($car_no);
-				$incar_id=$list[0]['incar_id'];
-				$product2=$model->findDiffByLastIncarId($incar_id);
-				foreach ($product2 as &$p2) {
-					$tmp[$p2['product_id']]=$p2['p_diff'];
-				} 
-			
+				
+				 
+				if (isset($list[0]['incar_id']))
+				{
+					$incar_id=$list[0]['incar_id'];
+					$product2=$model->findDiffByLastIncarId($incar_id);
+					foreach ($product2 as &$p2) {
+						$tmp[$p2['product_id']]=$p2['p_diff'];
+					} 
+				}
 				//$model = new IncarModel();
 				//$detail = $model->getInCarItemCountByCarNoDate($dataType, $data);
 				
@@ -121,5 +126,117 @@ class Incar extends Controller
 		
 		
 	} 
+	
+	
+	//edit page
+	 
+	public function edit($dataType = 'all')
+	{
+		
+		
+	     // Handle Get Request 求 拿當天  訂貨 by product item. sum qty
+	     if ($this->request->isGet()) {
+	          $param = $this->request->param();
+	           
+	          $incar_id= $param['incar_id']; 
+			  $car_no='';
+			  $incar_time='';
+			  
+	   		if (isset($incar_id)){ 
+			 
+				 // find last incar record and copy diff records to input form
+				 $model = new IncarModel();
+				 $list=$model->getProductListByIncarId($incar_id);
+				 if (isset($list)){
+					 
+					//$detail['product']=$list;
+					 
+					foreach ($list as &$l1) {
+						$incar_time=substr($l1['incar_time'],0,10);
+						$car_no=$l1['car_no'];
+						$tmp_incar_qty_am[$l1['product_id']]=$l1['incar_qty_am'];
+						$tmp_incar_qty_pm[$l1['product_id']]=$l1['incar_qty_pm'];
+						$tmp_diff[$l1['product_id']]=$l1['diff'];
+					} 
+				 }
+			 
+				$detail['incar_id']=$incar_id;
+				$detail['incar_time']=$incar_time;
+				$detail['car_no']=$car_no;
+				
+				 // find last incar record and copy diff records to input form
+				 $model2 = new IncarModel();
+				 $list2=$model2->findLastIncarRecordId($car_no);
+				 if (isset($list2[0]['incar_id']))
+				 {
+					$incar_id=$list2[0]['incar_id'];
+					$product2=$model2->findDiffByLastIncarId($incar_id);
+					foreach ($product2 as &$p2) {
+						$tmp[$p2['product_id']]=$p2['p_diff'];
+					} 
+				 }
+				 // find order items by carno & incar_time
+				 $model3 = new OrderModel();
+				 $data['table_no']=$detail['car_no'];
+				 $data['order_type'] = 0;
+				 $data['create_time']=$detail['incar_time'];
+				 $data['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
+				 $product = $model3->getListByCarNoDate($dataType, $data);  
+				 // fill diff record to product array
+				 foreach ($product as &$p) {
+					if (isset($tmp[$p['product_id']]))
+					$p['remaining']=$tmp[$p['product_id']];
+					
+					if (isset($tmp_incar_qty_am[$p['product_id']]))
+					$p['incar_qty_am']=$tmp_incar_qty_am[$p['product_id']];
+					
+					if (isset($tmp_incar_qty_pm[$p['product_id']]))
+					$p['incar_qty_pm']=$tmp_incar_qty_pm[$p['product_id']];
+					
+					if (isset($tmp_diff[$p['product_id']]))
+					$p['diff']=$tmp_diff[$p['product_id']];
+					
+				 } 
+			     // fill incar_am incar_pm to product array
+				 
+				 $detail['product']=$product;
+			   
+	   		}
+			 
+			// prepare product pull down menu
+			//get category. product  ricky 20240212
+			    $param['shop_supplier_id']=10001;
+				$param['type'] = 'sell';
+				//普通分类
+				$category = helper::arrayColumn2Key(CategoryModel::getApiALL(0, 0, 10001), 'category_id');
+				  
+				
+				 $model = new ProductModel;
+				 foreach ($category as &$c) {
+				     $param['category_id'] = $c['category_id'];
+				     $c['products'] = helper::arrayColumn2Key($model->getList2($param),'product_id');
+					// $c['products'] = $model->getList2($param);
+					 
+				 } 
+			return $this->renderSuccess('', compact('detail','category'));
+		}else{
+		
+		
+			//post请求 post order edit detail 
+			$data = json_decode($this->postData()['params'], true);
+			   
+			 
+		 
 			
+			$model = new IncarModel();
+			 
+			 if ($model->add($data)) {
+				 return $this->renderSuccess('添加成功');
+			 }
+		 
+			return $this->renderError($model->getError() ?: '添加失败');
+		}
+		
+		
+	} 
 }
