@@ -220,21 +220,17 @@ class Incar extends Controller
 				 } 
 			return $this->renderSuccess('', compact('detail','category'));
 		}else{
-		
-		
+		 
 			//post请求 post order edit detail 
 			$data = json_decode($this->postData()['params'], true);
-			   
-			 
-		 
-			
+			     
 			$model = new IncarModel();
 			 
-			 if ($model->add($data)) {
-				 return $this->renderSuccess('添加成功');
+			 if ($model->edit($data)) {
+				 return $this->renderSuccess('更改成功');
 			 }
 		 
-			return $this->renderError($model->getError() ?: '添加失败');
+			return $this->renderError($model->getError() ?: '更改失败');
 		}
 		
 		

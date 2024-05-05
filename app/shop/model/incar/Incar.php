@@ -11,8 +11,7 @@ use app\shop\model\incar\IncarProduct as IncarProductModel;
 
 class Incar extends IncarModel
 {
-	 
- 
+	  
 	 public function getIncarListByCarNoDate($dataType,$data=null)
 	 {
 		 $car_no=$data['car_no'];
@@ -72,7 +71,7 @@ class Incar extends IncarModel
 	    ->order(['incar_id' => 'desc'])
 		//->where('car_no','=', $data['car_no']) 
 		//->where('incar_time', '<=', $data['incar_time'])  
-		->select(); 
+		 ->paginate($data);
 	}
 	 
 	 /* 入車單，prepare input form
@@ -117,6 +116,46 @@ class Incar extends IncarModel
 		    $model = new IncarProductModel;
 	        $model->addProductList($this->incar_id, $data['product']);
 		  
+	        $this->commit();
+	        return true;
+	    } catch (\Exception $e) {
+	        $this->error = $e->getMessage();
+	        $this->rollback();
+	        return false;
+	    }
+	}
+	
+	/**
+	 * 入車單, edit request
+	 */
+	public function edit($data)
+	{
+	    if (!isset($data['incar_id']) || !isset($data['car_no']) || empty($data['incar_time'])) {
+	        $this->error = '請填車號,入車單號及入車時間';
+	        return false;
+	    }
+	  
+	    $incar_id=$data['incar_id'];
+		$data['app_id'] = self::$app_id;
+	    // 开启事务
+	    $this->startTrans();
+	    try {
+			
+	        // edit incar order , update updatetime
+			$model=$this->where('incar_id',$data['incar_id'])->find();
+			$model->update_time=time();
+	        $model->save();
+			  
+			  
+			// del incar.product record by incar_id
+			  IncarProductModel::where('incar_id','=',$incar_id)->delete();
+			  
+	        // add back latest incar order . product
+			  
+			  $model = new IncarProductModel;
+			  $model->addProductList($data['incar_id'], $data['product']);
+			
+	       
 	        $this->commit();
 	        return true;
 	    } catch (\Exception $e) {
