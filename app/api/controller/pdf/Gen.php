@@ -134,14 +134,16 @@ class Gen extends Controller
 			if ($i>=$product_count){
 				$tmp_html=$tmp_html.'<tr><td colspan="5"></td></tr><tr><td colspan="5"></td></tr>';
 			}else{
+				$sellingPoint=$order_model->product[$i]->selling_point;
+				$content=strip_tags($order_model->product[$i]->content);
 				$tmp_html=$tmp_html.'
-				<tr><td width="50" >'.($i+1).'</td>
+				<tr><td width="50">'.($i+1).'</td>
 				<td width="280">'.$order_model->product[$i]->product_name.'</td>
 				<td width="100">'.$order_model->product[$i]->total_num.'</td>
 				<td width="110">$'.$order_model->product[$i]->product_price.'</td>
 				<td width="100">$'.$order_model->product[$i]->total_price.'</td></tr>
-				<tr><td width="50" ></td>
-				<td  colspan="4">'.$order_model->product[$i]->content.'</td>
+				<tr><td width="50"></td>
+					<td colspan="4">'.$sellingPoint.' '.$content.'</td>
 				</tr>'; 
 				$total_amount[$j]=$total_amount[$j]+$order_model->product[$i]->total_price;
 			}

@@ -30,7 +30,7 @@ class Car extends Controller
 			$model = new IncarModel();
 			$data['car_no']=$car_no;
 			$data['incar_time']=$create_time." 00:00:00";
-			 
+			$data['ampm']=$ampm; 
 			$list = $model->getIncarListByCarNoDate($dataType, $data);
 			 
 			return $this->renderSuccess('', compact('list'));  
@@ -55,11 +55,12 @@ class Car extends Controller
 			
 			
      // 订单列表
-    $model = new IncarModel();
-    $data['car_no']=$car_no;
-    $data['incar_time']=$create_time." 00:00:00";
-	 $list = $model->getIncarListByCarNoDate($dataType, $data);
- 
+		$model = new IncarModel();
+		$data['car_no']=$car_no;
+		$data['incar_time']=$create_time." 00:00:00";
+		$data['ampm']=$ampm; 
+		$list = $model->getIncarListByCarNoDate($dataType, $data);
+	 
  
      // return $this->renderSuccess('', compact('list'));  
 		
@@ -165,13 +166,13 @@ class Car extends Controller
 		$page_pointer=0;
 		$tmp_html=" <table > ";
 		
-		$tmp_html=$tmp_html."<tr><td>提貨車號 : </td><td>".$data['car_no']."</td></tr>";
+		$tmp_html=$tmp_html."<tr><td  style=\"width:100px;\">提貨車號 : </td><td>".$data['car_no']."</td></tr>";
 		//$tmp_html=$tmp_html."<tr><td>提貨日期 : </td><td>".$data['create_time']."</td></tr>";
 		if ($data['incar_time']!="")
-			if (substr($data['incar_time'], -5)=='09:00')
-					$tmp_html=$tmp_html."<tr><td>提貨日期 : </td><td>".$data['incar_time']." 上午</td></tr>";
+			if ($data['ampm']=='09:00')
+					$tmp_html=$tmp_html."<tr><td style=\"width:100px;\">提貨日期 : </td><td>".substr($data['incar_time'],0,10)." 上午</td></tr>";
 					else
-					$tmp_html=$tmp_html."<tr><td>提貨日期 : </td><td>".$data['incar_time']." 下午</td></tr>";
+					$tmp_html=$tmp_html."<tr><td  style=\"width:100px;\">提貨日期 : </td><td>".substr($data['incar_time'],0,10)." 下午</td></tr>";
 					
 			
 		$tmp_html=$tmp_html."</table><table><tr><td > </td></tr></table>";
@@ -182,7 +183,8 @@ class Car extends Controller
 	 
 		foreach($list as $prow ){
 					$prow['total_num']=$prow['incar_qty_am']+$prow['incar_qty_pm'];
-					$tmp_html=$tmp_html."<tr><td style=\"valign: middle;line-height:24px;\" >".$i++."</td><td style=\"valign: middle;line-height:24px;\">".$prow['product_name']."[".trim(strip_tags($prow['product_content']))."]</td><td style=\"valign: middle;line-height:24px;text-align: center;\">".$prow['total_num']."</td><td style=\"text-align: center; valign: middle;line-height:24px\">".$prow['product_unit']."</td></tr>";
+					if ($prow['total_num']>0)
+					$tmp_html=$tmp_html."<tr><td style=\"valign: middle;line-height:24px;\" >".$i++."</td><td style=\"valign: middle;line-height:24px;\">".$prow['product_name']."[".trim(strip_tags($prow['selling_point'])).",".trim(strip_tags($prow['product_content']))."]</td><td style=\"valign: middle;line-height:24px;text-align: center;\">".$prow['total_num']."</td><td style=\"text-align: center; valign: middle;line-height:24px\">".$prow['product_unit']."</td></tr>";
 					//$tmp_html=$tmp_html."<tr><td></td><td>".."</td><td style=\"text-align: center; vertical-align: middle;\"></td><td style=\"text-align: center; vertical-align: middle;\"></td></tr>";
 		}
 		 

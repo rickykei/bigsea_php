@@ -16,21 +16,40 @@ class Incar extends IncarModel
 	 {
 		 $car_no=$data['car_no'];
 		 $incar_time=$data['incar_time'];
-		 
+		 $ampm=$data['ampm'];
 	 	$model = $this;
-	 	return $model
-	 	->alias('incar')
-	 	->field(['incar.*','ip.product_id as product_id, 
-		 ip.incar_qty_am as incar_qty_am, ip.incar_qty_pm as incar_qty_pm,
-		 ip.diff as diff,p.product_unit as product_unit,
-		 p.product_name as product_name,p.content as product_content'])
-	 	->leftjoin('incar_product ip','incar.incar_id = ip.incar_id')
-	 	->leftjoin('product p','ip.product_id = p.product_id')
-	 	//->order(['incar_id' => 'desc'])
-	 	->where('car_no','=', $car_no) 
-		->where('incar_time','=', $incar_time) 
-	 	//->where('incar_time', '<=', $data['incar_time'])  
-	 	->select(); 
+		
+		if ($ampm=="09:00"){
+			return $model
+			->alias('incar')
+			->field(['incar.*','ip.product_id as product_id, 
+			 ip.incar_qty_am as incar_qty_am, 0 as incar_qty_pm,
+			 ip.diff as diff,p.product_unit as product_unit,
+			 p.product_name as product_name,p.content as product_content,p.selling_point'])
+			->leftjoin('incar_product ip','incar.incar_id = ip.incar_id')
+			->leftjoin('product p','ip.product_id = p.product_id')
+			//->order(['incar_id' => 'desc'])
+			->where('car_no','=', $car_no) 
+			->where('incar_time','=', $incar_time) 
+			//->where('incar_time', '<=', $data['incar_time'])  
+			->select(); 
+		}else{
+			return $model
+			->alias('incar')
+			->field(['incar.*','ip.product_id as product_id, 
+			 0 as incar_qty_am, ip.incar_qty_pm as incar_qty_pm,
+			 ip.diff as diff,p.product_unit as product_unit,
+			 p.product_name as product_name,p.content as product_content,p.selling_point'])
+			->leftjoin('incar_product ip','incar.incar_id = ip.incar_id')
+			->leftjoin('product p','ip.product_id = p.product_id')
+			//->order(['incar_id' => 'desc'])
+			->where('car_no','=', $car_no) 
+			->where('incar_time','=', $incar_time) 
+			//->where('incar_time', '<=', $data['incar_time'])  
+			->select(); 
+		}
+	 	
+		
 	 }	
 	 
 	public function getProductListByIncarId($incar_id)
