@@ -144,14 +144,14 @@ class Incar extends Controller
 			  
 	   		if (isset($incar_id)){ 
 			 
-				 // find last incar record and copy diff records to input form
+				 // find  incar.product record  
 				 $model = new IncarModel();
-				 $list=$model->getProductListByIncarId($incar_id);
-				 if (isset($list)){
+				 $product3=$model->getProductListByIncarId($incar_id);
+				 if (isset($product3)){
 					 
 					//$detail['product']=$list;
 					 
-					foreach ($list as &$l1) {
+					foreach ($product3 as &$l1) {
 						$incar_time=substr($l1['incar_time'],0,10);
 						$car_no=$l1['car_no'];
 						$tmp_incar_qty_am[$l1['product_id']]=$l1['incar_qty_am'];
@@ -163,25 +163,34 @@ class Incar extends Controller
 				$detail['incar_id']=$incar_id;
 				$detail['incar_time']=$incar_time;
 				$detail['car_no']=$car_no;
-				
-				 // find last incar record and copy diff records to input form
-				 $model2 = new IncarModel();
-				 $list2=$model2->findLastIncarRecordId($car_no);
-				 if (isset($list2[0]['incar_id']))
-				 {
-					$incar_id=$list2[0]['incar_id'];
-					$product2=$model2->findDiffByLastIncarId($incar_id);
-					foreach ($product2 as &$p2) {
-						$tmp[$p2['product_id']]=$p2['p_diff'];
-					} 
-				 }
-				 // find order items by carno & incar_time
+				$product="";
+				// find last incar record and copy diff records to input form
+				// 找出最新的入車單，把diff 欄位，past diff，變為上天入車
+				$model2 = new IncarModel();
+				$list2=$model2->findLastIncarRecordId($car_no);
+				if (isset($list2[0]['incar_id']))
+				{
+									$incar_id=$list2[0]['incar_id'];
+									$product2=$model2->findDiffByLastIncarId($incar_id);
+									foreach ($product2 as &$p2) {
+										$tmp[$p2['product_id']]=$p2['p_diff'];
+										 
+									} 
+				}
+			
+				 // find order 量 by carno & incar_time出貨時間
 				 $model3 = new OrderModel();
 				 $data['table_no']=$detail['car_no'];
 				 $data['order_type'] = 0;
 				 $data['create_time']=$detail['incar_time'];
 				 $data['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
 				 $product = $model3->getListByCarNoDate($dataType, $data);  
+				 
+				 // 把 出貨單中有的product ，但不在order 中的產單，加回product Array
+			 
+				 
+				 
+				 
 				 // fill diff record to product array
 				 foreach ($product as &$p) {
 					if (isset($tmp[$p['product_id']]))
@@ -194,9 +203,15 @@ class Incar extends Controller
 					$p['incar_qty_pm']=$tmp_incar_qty_pm[$p['product_id']];
 					
 					if (isset($tmp_diff[$p['product_id']]))
-					$p['diff']=$tmp_diff[$p['product_id']];
+					$p['diff']=$p['total_num']-($p['incar_qty_am']+$p['incar_qty_pm']);
+					//$p['diff']=$tmp_diff[$p['product_id']];
+					//20240506 20:00pm monster advise
+					
 					
 				 } 
+				 
+				
+				 
 			     // fill incar_am incar_pm to product array
 				 
 				 $detail['product']=$product;

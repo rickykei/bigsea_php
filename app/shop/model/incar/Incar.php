@@ -60,8 +60,8 @@ class Incar extends IncarModel
 		->field(['incar.*','ip.product_id as product_id, ip.incar_qty_am as incar_qty_am, ip.incar_qty_pm as incar_qty_pm, ip.diff as diff,p.product_name as product_name'])
 		->leftjoin('incar_product ip','incar.incar_id = ip.incar_id')
 		->leftjoin('product p','ip.product_id = p.product_id')
-		//->order(['incar_id' => 'desc'])
 		->where('ip.incar_id','=', $incar_id) 
+		->order(['p.product_id' => 'desc'])
 		//->where('incar_time', '<=', $data['incar_time'])  
 		->select(); 
 	}	
@@ -201,14 +201,16 @@ class Incar extends IncarModel
 	public function findDiffByLastIncarId($lastIncarRecordId)
 	{
 		$model = $this;
-		 
+		  
 		return $model
 		->alias('incar')
-		->field(['incar.*','p.product_id as product_id, p.diff as p_diff'])
-		->leftjoin('incar_product p','incar.incar_id = p.incar_id')
+		->field(['incar.*','ip.product_id as product_id,  op.product_name as product_name,
+		 op.category_id as category_id, op.content as product_content, op.product_unit as product_unit, ip.diff as p_diff'])
+		->leftjoin('incar_product ip','incar.incar_id = ip.incar_id')
+		->leftjoin('order_product op','ip.product_id = op.product_id')
 		->where('incar.incar_id','=',$lastIncarRecordId)
-		->group("p.product_id")
-		->order(['p.incar_product_id' => 'desc']) 
+		->group("ip.product_id")
+		->order(['ip.incar_product_id' => 'desc']) 
 		->select(); 
 	}
 }

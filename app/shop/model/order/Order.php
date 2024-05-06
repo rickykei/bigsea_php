@@ -34,7 +34,7 @@ class Order extends OrderModel
 		  p.category_id as category_id, content as product_content, p.product_unit as product_unit, 0 as incar_qty_pm,
 			0 as incar_qty_am, 0 as diff, 0 as remaining'])
 		->leftjoin('order_product p','order.order_id = p.order_id')
-	    ->order(['p.category_id' => 'desc'])
+	    ->order(['p.product_id' => 'desc'])
 		->where('table_no','=', $data['table_no'])
 		->where('mealtime', '>=', $data['create_time'] .' 00:00:00') 
 		->where('mealtime', '<=', $data['create_time'] .' 23:59:59') 
