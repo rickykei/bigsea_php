@@ -40,8 +40,8 @@ class Order extends OrderModel
 		->where('mealtime', '<=', $data['create_time'] .' 23:59:59') 
 		//->where('mealtime', '<=', date("Y-m-d H:i:s")) 
 		//->where('mealtime', '<=', $data['create_time']) 
-		->where('order_status', '=','10') 
-		->where('pay_status', '=','10')  
+		//->where('order_status', '=','10') 
+		//->where('pay_status', '=','10')  
 		->group("p.product_id")
 		->select();
 			
