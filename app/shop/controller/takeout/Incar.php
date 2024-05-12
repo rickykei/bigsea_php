@@ -98,8 +98,10 @@ class Incar extends Controller
 											$p['diff']=$p['remaining'];
 										//$p['diff']=$tmp_diff[$p['product_id']];
 										//20240506 20:00pm monster advise
-										if ($tmp_product_id[$p['product_id']]==$p['product_id'])
-											unset($tmp_product_id[$p['product_id']]);
+										if (isset($tmp_product_id[$p['product_id']])){
+											if ($tmp_product_id[$p['product_id']]==$p['product_id'])
+												unset($tmp_product_id[$p['product_id']]);
+										}
 										
 										//save product_id =2 records
 										if ($p['product_id']==2){
@@ -136,6 +138,7 @@ class Incar extends Controller
 					}
 				
 					// 把 上車單中有的product ，但不在order 中的產品，加回product Array
+					if (isset($tmp_product_id[$p['product_id']])){
 					foreach($tmp_product_id as $tpi => $val){
 						
 						if (!isset($tmp_remaining[$val]))
@@ -153,7 +156,7 @@ class Incar extends Controller
 						 'product_unit' => $tmp_product_unit[$val]
 						 );
 					}
-					
+					}
 					
 					 
 					 // fill incar_am incar_pm to product array
@@ -184,10 +187,7 @@ class Incar extends Controller
 		
 			//post请求 post order edit detail 
 			$data = json_decode($this->postData()['params'], true);
-			   
-			 
-		 
-			
+			    
 			$model = new IncarModel();
 			 
 			 if ($model->add($data)) {
@@ -315,8 +315,10 @@ class Incar extends Controller
 						}
 						
 					//elimiate	incar.product array record which under the order.product array too
-					if ($p['product_id']==$tmp_product_id[$p['product_id']])
+					if (isset($tmp_product_id[$p['product_id']])){
+						if ($p['product_id']==$tmp_product_id[$p['product_id']])
 						unset($tmp_product_id[$p['product_id']]);
+					}
 						
 					
 				 } 
@@ -336,10 +338,11 @@ class Incar extends Controller
 				  
 				  
 				// 把 上車單中有的product ，但不在order 中的產品，加回product Array
+				if (isset($tmp_product_id[$p['product_id']])){
                 foreach($tmp_product_id as $tpi => $val){
 					
 					if (!isset($tmp_remaining[$val]))
-					$tmp_remaining[$val]=0;
+					$tmp_remaining[$val]=0; 
 					
 					$product_final[]=array(
 					 'product_id' => $tmp_product_id[$val],
@@ -352,7 +355,7 @@ class Incar extends Controller
 					 'category_id' => $tmp_category_id[$val],
 					 'product_unit' => $tmp_product_unit[$val]
 					 );
-				}
+				}}
 				
 				
 				 
