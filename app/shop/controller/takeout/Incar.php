@@ -84,6 +84,7 @@ class Incar extends Controller
 					$data['create_time']=$detail['incar_time'];
 					$data['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
 					$product_final=[];
+					
 					$product = $model3->getListByCarNoDate($dataType, $data);  
 					 
 					// fill diff record to product array
@@ -94,8 +95,8 @@ class Incar extends Controller
 											// it is because incar.product include on order.product
 										}
 										 
-										if (isset($tmp_diff[$p['product_id']]))
-											$p['diff']=$p['remaining'];
+										//if (isset($tmp_diff[$p['product_id']]))
+											$p['diff']=$p['remaining']-$p['total_num'];
 										//$p['diff']=$tmp_diff[$p['product_id']];
 										//20240506 20:00pm monster advise
 										if (isset($tmp_product_id[$p['product_id']])){
@@ -128,6 +129,7 @@ class Incar extends Controller
 					} 
 					
 					//copy back id 2 -> id1
+					if (isset($product_2))
 					foreach ($product_final as &$p) {
 						if ($p['product_id']==1){
 							$p['remaining']+=$product_2['remaining'];
@@ -138,7 +140,7 @@ class Incar extends Controller
 					}
 				
 					// 把 上車單中有的product ，但不在order 中的產品，加回product Array
-					if (isset($tmp_product_id[$p['product_id']])){
+					if (isset($tmp_product_id)){
 					foreach($tmp_product_id as $tpi => $val){
 						
 						if (!isset($tmp_remaining[$val]))
@@ -325,6 +327,7 @@ class Incar extends Controller
 				
 				
 				//copy back id 2 -> id1
+				if (isset($product_2))
 				foreach ($product_final as &$p) {
 					if ($p['product_id']==1){
 						$p['remaining']+=$product_2['remaining'];
@@ -338,7 +341,7 @@ class Incar extends Controller
 				  
 				  
 				// 把 上車單中有的product ，但不在order 中的產品，加回product Array
-				if (isset($tmp_product_id[$p['product_id']])){
+				if (isset($tmp_product_id)){
                 foreach($tmp_product_id as $tpi => $val){
 					
 					if (!isset($tmp_remaining[$val]))
