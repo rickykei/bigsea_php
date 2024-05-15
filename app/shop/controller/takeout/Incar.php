@@ -285,7 +285,7 @@ class Incar extends Controller
 					if (isset($tmp_incar_qty_pm[$p['product_id']]))
 					$p['incar_qty_pm']=$tmp_incar_qty_pm[$p['product_id']];
 					
-					if (isset($tmp_diff[$p['product_id']]))
+					//if (isset($tmp_diff[$p['product_id']]))
 					$p['diff']=($p['remaining']+$p['incar_qty_am']+$p['incar_qty_pm'])-$p['total_num'];
 					//$p['diff']=$tmp_diff[$p['product_id']];
 					//20240506 20:00pm monster advise
