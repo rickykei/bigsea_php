@@ -211,8 +211,20 @@ class Incar extends IncarModel
 		->field(['incar.*'])
 		->order(['incar.incar_time' => 'desc']) 
 		->where('car_no', '=', $car_no)
-		->where('incar_id', '<>', $incar_id)
+		->where('incar_id', '<', $incar_id)
 		->limit('1')
+		->select(); 
+		 
+	}
+	
+	public function findLastIncarRecordIdGroupByCarNo()
+	{
+		$model = $this;
+		 
+		return $model
+		->alias('incar')
+		->field(['car_no , max(incar_id) as incar_id'])
+		->group("car_no")
 		->select(); 
 		 
 	}

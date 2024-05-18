@@ -31,6 +31,25 @@ class Incar extends Controller
 			$data['car_no']=$car_no;
 			$data['incar_time']=$incar_time." ".$ampm;
 			$list = $model->getListByCarNoDate($dataType, $data);
+			
+			
+			//找最新incar_id grp by car no ，不顯示edit
+			$maxCarNo = $model->findLastIncarRecordIdGroupByCarNo();
+			$latestIncarIdArray=[];
+			foreach ($maxCarNo as $rec)
+			{
+				$latestIncarIdArray[]=$rec['incar_id'];
+			}
+			
+			foreach ($list as &$p)
+			{
+				if (in_array($p['incar_id'], $latestIncarIdArray)) { 
+				    $p['edit']=1;
+				} else { 
+				    $p['edit']=0;
+				} 
+			}
+			
 			return $this->renderSuccess('', compact('list'));   
        		  
        		}
