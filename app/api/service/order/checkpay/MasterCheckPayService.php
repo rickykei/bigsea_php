@@ -44,7 +44,7 @@ class MasterCheckPayService extends CheckPayService
             $productSku = $this->getOrderProductSku($product['product_id'], $product['product_sku_id']);
             // sku已不存在
             if (empty($productSku)) {
-                $this->error = "很抱歉，商品 [{$product['product_name']}] sku已不存在，请重新下单";
+                $this->error = "很抱歉，商品 [{$product['product_name']}] [{$product['product_id']}] [{$product['product_sku_id']}]sku已不存在，请重新下单";
                 return false;
             }
             // 付款减库存

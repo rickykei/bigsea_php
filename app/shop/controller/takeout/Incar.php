@@ -288,7 +288,7 @@ class Incar extends Controller
 				 $data['shop_supplier_id'] = $this->store['user']['shop_supplier_id'];
 				 $product_final=[];
 				 $product = $model3->getListByCarNoDate($dataType, $data);  
-				  
+				  	$hvproduct1=0;
 				 // fill diff record to product array
 				 foreach ($product as &$p) {
 					if (isset($tmp_remaining[$p['product_id']])){
@@ -313,9 +313,12 @@ class Incar extends Controller
 						
 						//save product_id =2 records 
 						if ($p['product_id']==2){
+							
 							$product_2['remaining']=$p['remaining'];
 							$product_2['total_num']=$p['total_num'];
 							$product_2['diff']=$p['diff'];  
+							$product_2['category_id']=$p['category_id'];
+							$product_2['product_unit']=$p['product_unit'];
 							$product_2['incar_qty_am']=$p['incar_qty_am'];
 							$product_2['incar_qty_pm']=$p['incar_qty_pm'];
 							
@@ -332,6 +335,8 @@ class Incar extends Controller
 								 'category_id' => $p['category_id'],
 								 'product_unit' => $p['product_unit']
 								 );
+								 
+							 
 							
 						}
 						
@@ -345,16 +350,21 @@ class Incar extends Controller
 				 } 
 				
 				
-				//copy back id 2 -> id1
-				if (isset($product_2))
-				foreach ($product_final as &$p) {
-					if ($p['product_id']==1){
-						$p['remaining']+=$product_2['remaining'];
-						$p['total_num']+=$product_2['total_num'];
-						$p['diff']+=$product_2['diff'];  
-						$p['incar_qty_am']+=$product_2['incar_qty_am'];
-						$p['incar_qty_pm']+=$product_2['incar_qty_pm'];
-					}
+				//copy back id 2 -> id1 if order hv prod 1
+				if (isset($product_2)){
+				
+					//if hv prorduct id 1 inside order case
+					foreach ($product_final as &$p) {
+						if ($p['product_id']==1){
+							$p['remaining']+=$product_2['remaining'];
+							$p['total_num']+=$product_2['total_num'];
+							$p['diff']+=$product_2['diff'];  
+							$p['incar_qty_am']+=$product_2['incar_qty_am'];
+							$p['incar_qty_pm']+=$product_2['incar_qty_pm'];
+							$hvproduct1=1;
+						}
+						
+					}  
 					
 				}
 				  
@@ -366,17 +376,34 @@ class Incar extends Controller
 					if (!isset($tmp_remaining[$val]))
 					$tmp_remaining[$val]=0; 
 					
-					$product_final[]=array(
-					 'product_id' => $tmp_product_id[$val],
-					 'product_name' => $tmp_product_name[$val],
-					 'remaining' => $tmp_remaining[$val],
-					 'incar_qty_am' =>  $tmp_incar_qty_am[$val],
-					 'incar_qty_pm' =>  $tmp_incar_qty_pm[$val],
-					 'diff'=> $tmp_remaining[$val]+$tmp_incar_qty_am[$val]+ $tmp_incar_qty_pm[$val],
-					 'total_num'=> 0,
-					 'category_id' => $tmp_category_id[$val],
-					 'product_unit' => $tmp_product_unit[$val]
-					 );
+					if ($tmp_product_id[$val]!=1){
+						$product_final[]=array(
+						 'product_id' => $tmp_product_id[$val],
+						 'product_name' => $tmp_product_name[$val],
+						 'remaining' => $tmp_remaining[$val],
+						 'incar_qty_am' =>  $tmp_incar_qty_am[$val],
+						 'incar_qty_pm' =>  $tmp_incar_qty_pm[$val],
+						 'diff'=> $tmp_remaining[$val]+$tmp_incar_qty_am[$val]+ $tmp_incar_qty_pm[$val],
+						 'total_num'=> 0,
+						 'category_id' => $tmp_category_id[$val],
+						 'product_unit' => $tmp_product_unit[$val]
+						 );
+					 }else{
+						 //if no product_id 1 inside order case
+						 if ($tmp_product_id[$val]==1&&isset($product_2)){
+						 	$product_final[]=array(
+						 	 'product_id' => 1,
+						 	 'product_name' => "中空",
+						 	 'remaining' => $product_2['remaining'],
+						 	 'incar_qty_am' =>   $tmp_incar_qty_am[$val],
+						 	 'incar_qty_pm' =>  $tmp_incar_qty_pm[$val],
+						 	 'diff'=> $tmp_remaining[$val]+$tmp_incar_qty_am[$val]+ $tmp_incar_qty_pm[$val]-$product_2['total_num'],
+						 	 'total_num'=> $product_2['total_num'],
+						 	 'category_id' => $product_2['category_id'],
+						 	 'product_unit' => $product_2['product_unit']
+						 	 );
+						  }
+					 }
 				}}
 				
 				
