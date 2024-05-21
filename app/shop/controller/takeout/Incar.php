@@ -376,7 +376,7 @@ class Incar extends Controller
 					if (!isset($tmp_remaining[$val]))
 					$tmp_remaining[$val]=0; 
 					
-					if ($tmp_product_id[$val]!=1){
+					if ($tmp_product_id[$val]!=1 || ($tmp_product_id[$val]==1&&!isset($product_2))){
 						$product_final[]=array(
 						 'product_id' => $tmp_product_id[$val],
 						 'product_name' => $tmp_product_name[$val],
