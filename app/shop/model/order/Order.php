@@ -348,7 +348,8 @@ class Order extends OrderModel
 			foreach ($data['new_product_list'] as $product) {
 				$p = ProductModel::detail($product['product_id']);
 				
-				 
+			  echo $p['product_sku']['product_sku_id'];
+			  
 			    $item = [
 			        'order_id' => $data['order_id'],
 			        'user_id' => $data['user_id'],
@@ -358,7 +359,7 @@ class Order extends OrderModel
 			        'image_id' => $p['logo']['image_id'],
 			        'deduct_stock_type' => $p['deduct_stock_type'],
 			        'spec_type' => $p['spec_type'],
-			        'product_sku_id' => $product['product_id'],
+			        'product_sku_id' => $p['product_sku']['product_sku_id'],
 			        'product_attr' => $p['product_attr'],
 			        'content' => $p['content'],
 			        'product_price' => $p['product_price'],
