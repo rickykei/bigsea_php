@@ -105,10 +105,14 @@ class Product extends ProductModel
     {
         $user = $param['userInfo'];
         //商品购物车数量
-        $product['cart_num'] = 0;
+        //org -> $product['cart_num'] = 0;
+		$product['cart_num'] = '';
         if ($user && isset($param['order_type'])) {
             $num = (new CartModel())->getSingleProductNum($product['product_id'], $user);
-            $product['cart_num'] = $num;
+            if ($num!=0)
+				$product['cart_num'] = $num;
+			else
+				$product['cart_num'] = '';
         }
         if ($product['product_attr'] || $product['product_feed'] || $product['spec_type'] == 20) {
             $product['spec_types'] = 20;
