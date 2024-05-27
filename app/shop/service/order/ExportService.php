@@ -11,6 +11,62 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
  */
 class ExportService
 {
+	
+	/**
+	 * 订单导出
+	 */
+	public function orderListForBigSea($list)
+	{
+	    $spreadsheet = new Spreadsheet();
+	    $sheet = $spreadsheet->getActiveSheet();
+	
+	    //列宽
+	    $sheet->getColumnDimension('B')->setWidth(30);
+	    $sheet->getColumnDimension('P')->setWidth(30);
+	
+	    //设置工作表标题名称
+	    $sheet->setTitle('訂單明細');
+	
+	    $sheet->setCellValue('A1', '訂單號');
+	    $sheet->setCellValue('B1', '買家');
+	    $sheet->setCellValue('C1', '配送方式');
+	    $sheet->setCellValue('D1', '送貨日期');
+	    $sheet->setCellValue('E1', '送貨時間'); 
+	    $sheet->setCellValue('F1', '实付款金额');
+	 
+	
+	    //填充数据
+	    $index = 0;
+	    foreach ($list as $order) {
+			
+			if (substr($order['mealtime'], 11, 5)=="09:00")
+				$am_pm="AM";
+				else
+				$am_pm="PM";
+			
+	        $address = $order['address'];
+	        $sheet->setCellValue('A' . ($index + 2), "\t" . $order['order_id'] ."(".$order['order_no'].") \t");
+	        $sheet->setCellValue('B' . ($index + 2), $order['user'] ? $order['user']['nickName'] : '');
+			$sheet->setCellValue('C' . ($index + 2), $order['table_no']);
+			$sheet->setCellValue('D' . ($index + 2), substr($order['mealtime'], 0, 10));
+			$sheet->setCellValue('E' . ($index + 2), $am_pm); 
+	        $sheet->setCellValue('F' . ($index + 2), $order['pay_price']);
+	        
+	        $index++;
+	    }
+	
+	    //保存文件
+	    $writer = new Xlsx($spreadsheet);
+	    $filename = iconv("UTF-8", "GB2312//IGNORE", 'INVOICE') . '-' . date('YmdHis') . '.xlsx';
+	    header('Content-Type: application/vnd.ms-excel');
+	    header('Content-Disposition: attachment;filename="' . $filename . '"');
+	    header('Cache-Control: max-age=0');
+	    $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+	    $writer->save('php://output');
+	    exit();
+	}
+	
+	
     /**
      * 订单导出
      */

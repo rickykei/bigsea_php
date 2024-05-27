@@ -154,6 +154,7 @@ class Incar extends Controller
 							$p['remaining']+=$product_2['remaining'];
 							$p['total_num']+=$product_2['total_num'];
 							$p['diff']+=$product_2['diff'];  
+							$product_2=null;
 						}
 						
 					}
@@ -179,7 +180,20 @@ class Incar extends Controller
 					}
 					}
 					
-					 
+					 //if no product_id 1 on incar and hv product id 1 inside order case
+					 if (isset($product_2)){
+					 							 $product_final[]=array(
+					 							  'product_id' => 1,
+					 							  'product_name' => "中空",
+					 							  'remaining' => $product_2['remaining'],
+					 							  'incar_qty_am' =>  0,
+					 							  'incar_qty_pm' =>  0,
+					 							  'diff'=> 0-$product_2['total_num'],
+					 							  'total_num'=> $product_2['total_num'],
+					 							  'category_id' => $product_2['category_id'],
+					 							  'product_unit' => $product_2['product_unit']
+					 							  );
+					 							 }
 					 // fill incar_am incar_pm to product array
 					 
 					 $detail['product']=$product_final;
@@ -353,7 +367,8 @@ class Incar extends Controller
 				//copy back id 2 -> id1 if order hv prod 1
 				if (isset($product_2)){
 				
-					//if hv prorduct id 1 inside order case
+					//if hv product id 1 inside order case
+					// copy product id 2 value to 1
 					foreach ($product_final as &$p) {
 						if ($p['product_id']==1){
 							$p['remaining']+=$product_2['remaining'];
@@ -362,6 +377,7 @@ class Incar extends Controller
 							$p['incar_qty_am']+=$product_2['incar_qty_am'];
 							$p['incar_qty_pm']+=$product_2['incar_qty_pm'];
 							$hvproduct1=1;
+							$product_2=null;
 						}
 						
 					}  
@@ -388,8 +404,9 @@ class Incar extends Controller
 						 'category_id' => $tmp_category_id[$val],
 						 'product_unit' => $tmp_product_unit[$val]
 						 );
+						 $product_2=null;
 					 }else{
-						 //if no product_id 1 inside order case
+						 //if hv product_id 1 on incar and inside order case
 						 if ($tmp_product_id[$val]==1&&isset($product_2)){
 						 	$product_final[]=array(
 						 	 'product_id' => 1,
@@ -402,11 +419,27 @@ class Incar extends Controller
 						 	 'category_id' => $product_2['category_id'],
 						 	 'product_unit' => $product_2['product_unit']
 						 	 );
-						  }
+							 $product_2=null;
+						 } 
+						 
 					 }
 				}}
 				
 				
+				//if no product_id 1 on incar and hv product id 1 inside order case
+				if (isset($product_2)){
+											 $product_final[]=array(
+											  'product_id' => 1,
+											  'product_name' => "中空",
+											  'remaining' => $product_2['remaining'],
+											  'incar_qty_am' =>  0,
+											  'incar_qty_pm' =>  0,
+											  'diff'=> 0-$product_2['total_num'],
+											  'total_num'=> $product_2['total_num'],
+											  'category_id' => $product_2['category_id'],
+											  'product_unit' => $product_2['product_unit']
+											  );
+											 }
 				 
 			     // fill incar_am incar_pm to product array
 				 

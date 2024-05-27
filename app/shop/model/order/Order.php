@@ -106,7 +106,7 @@ class Order extends OrderModel
         // 获取订单列表
         $list = $this->getListAll($dataType, $query);
         // 导出excel文件
-        return (new Exportservice)->orderList($list);
+        return (new Exportservice)->orderListForBigSea($list);
     }
 
     /**
