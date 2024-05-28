@@ -115,9 +115,14 @@ class Order extends OrderModel
     private function setWhere($model, $data)
     {
         //搜索订单号
+		/*
         if (isset($data['order_no']) && $data['order_no'] != '') {
             $model = $model->where('order_no', 'like', '%' . trim($data['order_no']) . '%');
         }
+		*/
+	   if (isset($data['order_no']) && $data['order_no'] != '') {
+	       $model = $model->where('order_id','=', $data['order_no']);
+	   }
         //搜索配送方式
         if (isset($data['style_id']) && $data['style_id'] != '') {
             $model = $model->where('delivery_type', '=', $data['style_id']);
@@ -131,9 +136,14 @@ class Order extends OrderModel
             $model = $model->where('shop_supplier_id', '=', $data['shop_supplier_id']);
         }
         //搜索时间段
+		/*
         if (isset($data['create_time']) && $data['create_time'] != '') {
             $model = $model->where('create_time', 'between', [strtotime($data['create_time'][0]), strtotime($data['create_time'][1]) + 86399]);
-        }
+        }*/
+		if (isset($data['create_time']) && $data['create_time'] != '') {
+		    $model = $model->where('mealtime', 'between', [$data['create_time'][0]." 00:00:00", $data['create_time'][1]." 23:59:59"]);
+		}
+		
         return $model;
     }
 
