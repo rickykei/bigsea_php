@@ -115,5 +115,36 @@ class Order extends Controller
 		return $this->renderError($model->getError() ?: '更新失败');
     }
 	
-	 
+	 public function pdf()
+	  {
+	 		
+		 if ($this->request->isGet()) {
+		      
+	 		$param = $this->request->param();
+	 		if (isset($param['order_no'])){
+	 			
+	 		
+	 		$order_id=$param['order_no'];
+	 		 
+	 		// 订单详情
+	 		$model = OrderModel::getUserOrderDetail($order_id);
+	 		   
+	 		
+	 		// 请求参数
+	 		
+			$comp_name[0]='大海貿易有限公司';
+	 		$comp_name[1]='GIANT OCEAN TRADING CO. LTD.';
+	 		$comp_name[2]='No. 78 Ho Yeung St Tuen Mun Area 40 Landing N.T. HK';
+	 		$comp_name[3]='MOBLIE : 9319-7967   TEL: 2787 3593    FAX: 2412 2661';
+	 		 
+			$title = 'pdf';
+	 		
+	 		//search order records
+	 		//search order itesm
+			 $model->setPdf($comp_name,$model);
+	 		}
+			}
+	  }
+	  
+	  
 }

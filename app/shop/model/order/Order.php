@@ -399,4 +399,19 @@ class Order extends OrderModel
 		   
     }
 
+
+ /**
+   * 订单详情
+   */
+  public static function getUserOrderDetail($order_id)
+  {
+      $model = new static();
+      $order = $model->where(['order_id' => $order_id])->with(['product' => ['image'], 'address', 'supplier', 'user', 'deliver'])->find();
+      if (empty($order)) {
+          throw new BaseException(['msg' => '订单不存在']);
+      }
+      return $order;
+  }
+	
+	
 }
