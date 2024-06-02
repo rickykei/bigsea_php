@@ -127,6 +127,8 @@ class Incar extends Controller
 										if ($p['product_id']==2){
 											$product_2['remaining']=$p['remaining'];
 											$product_2['total_num']=$p['total_num'];
+											$product_2['category_id']=$p['category_id'];
+											$product_2['product_unit']=$p['product_unit'];
 											$product_2['diff']=$p['diff'];  
 										}else{
 											
