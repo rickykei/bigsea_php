@@ -20,6 +20,62 @@ use app\shop\model\product\Product as ProductModel;
 class Order extends OrderModel
 {
 	
+	// for report
+	// get each product id sales total
+	// from create date
+	public function getDailySalesOrderByCarId($dataType, $data = null)
+	{
+		 
+	    $model = $this;
+	    // 检索查询条件 
+		
+		if (isset($data['create_time'])&&$data['create_time']!="")
+		 $model = $model->where('mealtime', 'between', [$data['create_time'][0]." 00:00:00", $data['create_time'][1]." 23:59:59"]);
+		 
+		  
+		 if (isset($data['car_no'])&&$data['car_no']!="")
+		  $model = $model->where('table_no', '=', $data['car_no']);
+		  
+	    return $model
+		->alias('order')
+		->field(['order.*','sum(total_price) as total_price ,table_no , FROM_UNIXTIME(pay_time,"%Y-%m-%d") as pay_time']) 
+		->wherein('pay_status', '20') 
+		//->where('pay_status', '=','10')  
+		->group("FROM_UNIXTIME(pay_time,'%Y-%m-%d')")
+		->paginate($data);
+		//->select();
+			
+			 
+	}
+	// for report
+	// get each product id sales total
+	// from create date
+	public function getListByDateGroupByProductId($dataType, $data = null)
+	{
+		 
+	    $model = $this;
+	    // 检索查询条件 
+		if (isset($data['create_time'])&&$data['create_time']!="")
+		 $model = $model->where('mealtime', 'between', [$data['create_time'][0]." 00:00:00", $data['create_time'][1]." 23:59:59"]);
+		 
+	    return $model
+		->alias('order')
+		->field(['order.*','sum(p.total_num) as total_num ,p.product_id as product_id, p.product_name as product_name,
+		  p.category_id as category_id, k.content as product_content, k.product_unit as product_unit ,k.selling_point as selling_point'])
+		->leftjoin('order_product p','order.order_id = p.order_id')
+		->leftjoin('product k','p.product_id = k.product_id')
+	    ->order(['p.product_id' => 'desc'])
+		//->where('mealtime', '>=', $data['create_time'] .' 00:00:00') 
+		//->where('mealtime', '<=', $data['create_time'] .' 23:59:59') 
+		->wherein('order_status', '10,30') 
+		//->where('pay_status', '=','10')  
+		->group("p.product_id")
+		->paginate($data);
+		//->select();
+			
+			 
+	}
+	
 	public function getListByCarNoDate($dataType, $data = null)
 	{
 		 
