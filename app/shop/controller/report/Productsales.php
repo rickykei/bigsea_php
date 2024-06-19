@@ -32,11 +32,10 @@ class ProductSales extends Controller
      
 	 public function export($dataType = 'all')
 	  {
-	 		   $model = new OrderModel();
+	 	$model = new OrderModel();
 		 if ($this->request->isGet()) { 
 	 		$data = $this->request->param();
-			 
-				 
+			  
 				// 订单详情
 				$list = $model->getListByDateGroupByProductId($dataType, $data);
 					
@@ -143,7 +142,7 @@ class ProductSales extends Controller
 	 		$tmp_html=" <table > ";
 	 		 
 	 		 $tmp_html=$tmp_html."<tr><td  style=\"width:100px;\"> 產品銷量 </td></tr>";
-			  if ($data['create_time'][0]!="" && $data['create_time'][1]!)
+			  if ($data['create_time'][0]!="" && $data['create_time'][1]!="")
 	 		$tmp_html=$tmp_html."<tr><td  style=\"width:100px;\"> 提貨日期 : </td><td>".$data['create_time'][0]." 至 ".$data['create_time'][1]."</td></tr>";
 	 					
 	 			

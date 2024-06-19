@@ -29,8 +29,13 @@ class Order extends OrderModel
 	    $model = $this;
 	    // 检索查询条件 
 		
-		if (isset($data['create_time'])&&$data['create_time']!="")
-		 $model = $model->where('mealtime', 'between', [$data['create_time'][0]." 00:00:00", $data['create_time'][1]." 23:59:59"]);
+		if (isset($data['create_time'][0])&&isset($data['create_time'][1])){
+			$from_date=strtotime($data['create_time'][0]." 00:00:00");
+			$to_date=strtotime($data['create_time'][1]." 23:59:59"); 
+			$model = $model->where('pay_time', 'between', "{$from_date},{$to_date}");
+			
+		}
+		 
 		 
 		  
 		 if (isset($data['car_no'])&&$data['car_no']!="")

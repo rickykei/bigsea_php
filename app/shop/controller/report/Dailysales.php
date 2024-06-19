@@ -143,7 +143,7 @@ class DailySales extends Controller
 	 		$tmp_html=" <table > ";
 	 		 
 	 		 $tmp_html=$tmp_html."<tr><td  style=\"width:100px;\"> 每日營業額 </td></tr>";
-			 if ($data['create_time'][0]!="" && $data['create_time'][1]!)
+			 if ($data['create_time'][0]!="" && $data['create_time'][1]!="")
 	 		$tmp_html=$tmp_html."<tr><td  style=\"width:100px;\"> 提貨日期 : </td><td>".$data['create_time'][0]." 至 ".$data['create_time'][1]."</td></tr>";
 	 					
 	 			
@@ -152,13 +152,13 @@ class DailySales extends Controller
 	 	  	$tmp_html=$tmp_html."<tr><td style=\"width:35px;valign: middle;line-height:24px;\">No.</td><td style=\"width:100px;valign: middle;line-height:24px; \">日</td><td style=\"width:100px; text-align: center; valign: middle;line-height:24px;\">車號 </td><td style=\"width:100px;text-align: center; valign: middle;line-height:24px;\">營業額</td></tr>";
 	 		
 	 		$i=1;
-	 	 
+			$grand_total=0;
 	 		foreach($list as $prow ){
-	 					  
+	 					 $grand_total+=$prow['total_price'];
 	 					$tmp_html=$tmp_html."<tr><td style=\"valign: middle;line-height:24px;\" >".$i++."</td><td style=\"valign: middle;line-height:24px;\">".$prow['pay_time']."</td><td style=\"valign: middle;line-height:24px;text-align: center;\">".$prow['table_no']."</td><td style=\"text-align: center; valign: middle;line-height:24px\">".$prow['total_price']."</td></tr>";
 	 					//$tmp_html=$tmp_html."<tr><td></td><td>".."</td><td style=\"text-align: center; vertical-align: middle;\"></td><td style=\"text-align: center; vertical-align: middle;\"></td></tr>";
 	 		}
-	 		 
+				$tmp_html=$tmp_html."<tr><td style=\"valign: middle;line-height:24px;\" > </td><td style=\"valign: middle;line-height:24px;\"> </td><td style=\"valign: middle;line-height:24px;text-align: center;\">Total:</td><td style=\"text-align: center; valign: middle;line-height:24px\">".number_format($grand_total, 2, '.', '')."</td></tr>";
 	 	   $tmp_html=$tmp_html."</table> ";
 	 	// header('Content-Type: application/json; charset=utf-8');
 	 	 //echo json_encode($list);
